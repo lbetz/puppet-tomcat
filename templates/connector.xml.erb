@@ -1,0 +1,15 @@
+<Connector URIEncoding="<%= @uri_encoding %>"
+	port="<%= @port %>"
+	<% if @address -%>
+	address="<%= @address %>"
+	<% end -%>
+	<% if @scheme -%>
+	scheme="<%= @scheme %>"
+	<% end -%>
+	<% if @executor -%>
+	executor="<%= @executor %>"
+	<% end -%>
+        <%= @options.collect! {|i| "#{i}" }.join("\n") %>
+	protocol="<%= @protocol %>"
+	connectionTimeout="<%= @connection_timeout %>"
+	redirectPort="<%= @redirect_port %>" />
