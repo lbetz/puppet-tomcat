@@ -1,5 +1,6 @@
       <Resource name="<%= @resource %>" auth="<%= @auth %>"
          type="<%= @type %>"
-	 description="<%= @description %>"
-	 factory="<%= @factory %>"
-	 pathname="<%= @pathname %>" />
+<% @extra_attrs.each_pair do |key, value| -%>
+	 <%= key %>="<%= value %>"
+<% end -%>
+         />

@@ -7,12 +7,12 @@ define tomcat::resource(
       $name   => undef,
       default => regsubst($name, '^[^:]+:([^:]+)$', '\1'),
    },
-   $auth        = '',
-   $description = '',
-   $factory     = '',
-   $type        = '',
-   $pathname    = '',
+   $auth        = 'container',
+   $type, 
+   $extra_attrs = {},
 ) {
+
+   validate_hash($extra_attrs)
 
    $basedir = "${tomcat::basedir}/${server}"
 

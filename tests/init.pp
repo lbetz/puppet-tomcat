@@ -35,7 +35,9 @@ tomcat::server { 'myapp1':
                   'org.apache.catalina.realm.LockOutRealm' => {
                      'realms' => {
                          'org.apache.catalina.realm.UserDatabaseRealm' => {
-                            'resource_name' => 'UserDatabase', 
+                            'attrs' => {
+                               'resource_name' => 'UserDatabase', 
+                            },
                          },
                      },
                   },
@@ -51,7 +53,9 @@ tomcat::server { 'myapp1':
                         'org.apache.catalina.realm.LockOutRealm' => {
                            'realms' => {
                               'org.apache.catalina.realm.UserDatabaseRealm' => {
-                                 'resource_name' => 'UserDatabase', 
+                                 'attrs' => {
+                                    'resource_name' => 'UserDatabase', 
+                                 },
                               },
                            },
                         },
@@ -66,9 +70,11 @@ tomcat::server { 'myapp1':
       'UserDatabase' => {
          'auth'        => 'Container',
          'type'        => 'org.apache.catalina.UserDatabase',
-         'description' => 'User database that can be updated and saved',
-         'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
-         'pathname'    => 'conf/tomcat-users.xml',
+         'extra_attrs' => {
+            'description' => 'User database that can be updated and saved',
+            'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
+            'pathname'    => 'conf/tomcat-users.xml',
+         },
       },
    },
    listeners => {
@@ -101,7 +107,9 @@ tomcat::server { 'myapp2':
                'default_host' => 'localhost2',
                'realms'       => { 
                   'org.apache.catalina.realm.UserDatabaseRealm' => {
-                     'resource_name' => 'UserDatabase', 
+                     'attrs' => {
+                        'resource_name' => 'UserDatabase', 
+                     },
                   },
                },        
                'hosts'        => {
@@ -121,9 +129,11 @@ tomcat::server { 'myapp2':
       'UserDatabase' => {
          'auth'        => 'Container',
          'type'        => 'org.apache.catalina.UserDatabase',
-         'description' => 'User database that can be updated and saved',
-         'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
-         'pathname'    => 'conf/tomcat-users.xml',
+         'extra_attrs' => {
+            'description' => 'User database that can be updated and saved',
+            'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
+            'pathname'    => 'conf/tomcat-users.xml',
+         },
       },
    },
    listeners => {

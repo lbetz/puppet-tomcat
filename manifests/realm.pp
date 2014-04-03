@@ -1,5 +1,5 @@
 define tomcat::realm(
-  $resource_name = undef,
+  $attrs         = {},
   $realms        = {},
   $server        = regsubst($name, '^([^:]+):.*$', '\1') ? {
     $name   => undef,
@@ -29,6 +29,7 @@ define tomcat::realm(
 ) {
 
    validate_hash($realms)
+   validate_hash($attrs)
    validate_string($server)
    validate_string($service)
    validate_string($engine)
@@ -37,17 +38,19 @@ define tomcat::realm(
 
    $basedir = "${tomcat::basedir}/${server}"
 
+   $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.each_pair do |key, value| -%> <%= key %>='<%= value %>'<% end -%>")
+
    if $host {
       validate_string($host)
       if $realms != {} {
          concat::fragment { "${name}-header":
             target  => "${basedir}/conf/host-${host}.xml",
-            content => inline_template("   <Realm className='<%= @class_name %>'<% if @resource_name %> resourceName='<%= @resource_name %>'<% end %>>\n"),
-            order   => '30',
+            content => "${_content}>\n",
+            order   => '31',
          }
          concat::fragment { "${name}-footer":
             target  => "${basedir}/conf/host-${host}.xml",
-            content => "   </Realm>\n",
+            content => "</Realm>\n",
             order   => '36',
          }
          create_resources(tomcat::realm,
@@ -55,7 +58,7 @@ define tomcat::realm(
       } else {
          concat::fragment { $name:
             target  => "${basedir}/conf/host-${host}.xml",
-            content => inline_template("   <Realm className='<%= @class_name %>'<% if @resource_name %> resourceName='<%= @resource_name %>'<% end %>/>\n"),
+            content => "${_content} />\n",
             order   => '33',
          }
       }
@@ -63,12 +66,12 @@ define tomcat::realm(
       if $realms != {} {
          concat::fragment { "${name}-header":
             target  => "${basedir}/conf/service-${service}.xml",
-            content => inline_template("      <Realm className='<%= @class_name %>'<% if @resource_name %> resourceName='<%= @resource_name %>'<% end %>>\n"),
+            content => "${_content}>\n",
             order   => '82',
          }
          concat::fragment { "${name}-footer":
             target  => "${basedir}/conf/service-${service}.xml",
-            content => "      </Realm>\n",
+            content => "</Realm>\n",
             order   => '86',
          }
          create_resources(tomcat::realm,
@@ -76,7 +79,7 @@ define tomcat::realm(
       } else {
          concat::fragment { $name:
             target  => "${basedir}/conf/service-${service}.xml",
-            content => inline_template("      <Realm className='<%= @class_name %>'<% if @resource_name %> resourceName='<%= @resource_name %>'<% end %>/>\n"),
+            content => "${_content} />\n",
            order   => '83',
          }
       }
