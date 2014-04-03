@@ -13,6 +13,11 @@ class { 'tomcat':
    version => '7',
 } ->
 
+tomcat::server { 'myapp0':
+   ensure   => 'running',
+   managed  => false,
+}
+
 tomcat::server { 'myapp1':
    ensure   => 'running',
    enable   => false,
@@ -88,7 +93,7 @@ tomcat::server { 'myapp1':
 } ->
 
 tomcat::server { 'myapp2':
-   ensure   => 'stopped',
+   ensure   => 'absent',
    enable   => false,
    port     => '8006',
    java_home => '/etc/alternatives/jre_1.6.0',

@@ -6,6 +6,7 @@ define tomcat::server(
    $resources = {},
    $services  = {},
    $java_home = '/usr/lib/jvm/jre',
+   $managed   = true,
 ) {
 
    validate_re($ensure, '^(present|absent|running|stopped)$',
@@ -16,17 +17,25 @@ define tomcat::server(
 
    if $ensure != 'absent' {
       tomcat::server::install { $title: } ->
-      tomcat::server::config { $title:
-         port      => $port,
-         services  => $services,
-         resources => $resources,
-         listeners => $listeners,
+      tomcat::server::initialize { $title:
          java_home => $java_home,
       } ~>
       tomcat::server::service { $title:
          ensure => $ensure,
          enable => $enable,
       }
+
+      if $managed {
+         tomcat::server::config { $title:
+            port      => $port,
+            services  => $services,
+            resources => $resources,
+            listeners => $listeners,
+            require   => Tomcat::Server::Initialize[$title],
+            notify    => Tomcat::Server::Service[$title],
+         }
+      }
+
    }
    else {
       tomcat::server::service { $title:

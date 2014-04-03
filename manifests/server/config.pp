@@ -1,24 +1,13 @@
 define tomcat::server::config(
-   $ensure = 'present',
    $port,
    $services,
    $listeners,
    $resources,
-   $java_home,
 ) {
 
-   $server          = $title
-   $basedir         = "${tomcat::basedir}/${server}"
-   $version         = $tomcat::version
-   $owner           = $params::owner
-   $catalina_home   = $params::config[$version]['catalina_home']
-   $catalina_script = $params::config[$version]['catalina_script']
-
-   File {
-      owner => $owner,
-      group => 'adm',
-      mode  => '0460',
-   }
+   $server  = $title
+   $basedir = "${tomcat::basedir}/${server}"
+   $owner   = $params::owner
 
    concat { "${basedir}/conf/server.xml":
       owner   => $owner,
@@ -56,16 +45,11 @@ define tomcat::server::config(
       order   => '99',
    }
 
-   file { "/etc/init.d/tomcat-${title}":
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-      content => template('tomcat/tomcat.init.erb'),
-   }
-
    file { "${basedir}/conf/web.xml":
       ensure => file,
+      owner => $owner,
+      group => 'adm',
+      mode  => '0460',
       source => 'puppet:///modules/tomcat/web.xml',
    }
 
