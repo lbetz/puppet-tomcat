@@ -44,7 +44,7 @@ define tomcat::host(
    concat::fragment { $name:
       target  => "${basedir}/conf/service-${service}.xml",
       content => "      &host-${host};\n",
-      order   => '86',
+      order   => '87',
    }
 
    concat { "${basedir}/conf/host-${host}.xml":

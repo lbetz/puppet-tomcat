@@ -32,8 +32,12 @@ tomcat::server { 'myapp1':
             'Catalina' => {
                'default_host' => 'localhost',
                'realms'       => { 
-                  'org.apache.catalina.realm.UserDatabaseRealm' => {
-                     'resource_name' => 'UserDatabase', 
+                  'org.apache.catalina.realm.LockOutRealm' => {
+                     'realms' => {
+                         'org.apache.catalina.realm.UserDatabaseRealm' => {
+                            'resource_name' => 'UserDatabase', 
+                         },
+                     },
                   },
                },        
                'hosts'        => {
@@ -44,8 +48,12 @@ tomcat::server { 'myapp1':
                      'xml_validation'      => false,
                      'xml_namespace_aware' => false,
                      'realms'              => {
-                        'org.apache.catalina.realm.UserDatabaseRealm' => {
-                           'resource_name' => 'UserDatabase', 
+                        'org.apache.catalina.realm.LockOutRealm' => {
+                           'realms' => {
+                              'org.apache.catalina.realm.UserDatabaseRealm' => {
+                                 'resource_name' => 'UserDatabase', 
+                              },
+                           },
                         },
                      },        
                   },
