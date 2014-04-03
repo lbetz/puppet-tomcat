@@ -44,6 +44,7 @@ class tomcat(
    validate_re($version, '^[6-7]$')
    validate_absolute_path($basedir)
 
+   $catalina_home   = $params::catalina_home
    $packages        = $params::config[$version]['packages']
    $service         = $params::config[$version]['service']
    $catalina_script = $params::config[$version]['catalina_script']
@@ -63,6 +64,14 @@ class tomcat(
       group  => 'root',
       mode   => '0755',
       source => 'puppet:///modules/tomcat/catalina.sh',
+   } ->
+
+   file { "${catalina_home}/bin/setclasspath.sh":
+      ensure  => file,
+      owner   => 'root',
+      group   => 'adm',
+      mode    => '0664',
+      source  => 'puppet:///modules/tomcat/setclasspath.sh',
    } ->
 
    file { "/etc/init.d/${service}":

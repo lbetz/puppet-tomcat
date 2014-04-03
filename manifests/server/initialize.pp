@@ -1,5 +1,7 @@
 define tomcat::server::initialize(
+   $ensure = 'present',
    $java_home,
+   $setenv,
 ) {
 
    $version         = $tomcat::version
@@ -10,11 +12,29 @@ define tomcat::server::initialize(
    $owner           = $params::owner
 
    file { "/etc/init.d/tomcat-${title}":
-      ensure => file,
+      ensure => $ensure ? {
+         absent  => 'absent',
+         default => file,
+      },
       owner  => 'root',
       group  => 'root',
       mode   => '0755',
       content => template('tomcat/tomcat.init.erb'),
+   }
+
+   file { "${basedir}/bin/setenv.sh":
+      ensure  => file,
+      owner   => 'root',
+      group   => 'adm',
+      mode    => '0640',
+      content => template('tomcat/setenv.sh.erb'),
+   }
+
+   file { "${basedir}/bin/setenv-local.sh":
+      ensure  => file,
+      owner   => 'root',
+      group   => 'adm',
+      mode    => '0640',
    }
 
 }

@@ -1,0 +1,26 @@
+# 
+# JVM tuning parameters
+#
+
+<% if has_variable?("classpath") %>
+# force catalina.sh to use the common library in CATALINA_HOME and not CATALINA_BASE
+# this is required to run tomcat on RHEL6 (Santiago)
+export CLASSPATH=<%= @classpath %>
+<% end %>
+
+export DSUN_JAVA2D_OPENGL="false"
+export DJAVA_AWT_HEADLESS="true"
+export JAVA_XMX="256m"
+export JAVA_XX_MAXPERMSIZE="256m"
+
+. $CATALINA_BASE/bin/setenv-local.sh
+
+<% @setenv.each do |env| %>
+	export <%= env -%>
+<% end %>
+
+export JAVA_OPTS="-Dsun.java2d.opengl=${DSUN_JAVA2D_OPENGL} \
+	          -Djava.awt.headless=${DJAVA_AWT_HEADLESS} \
+		  -Xmx${JAVA_XMX} \
+	          -XX:MaxPermSize=${JAVA_XX_MAXPERMSIZE} \
+	          ${ADD_JAVA_OPTS}"

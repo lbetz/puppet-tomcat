@@ -7,18 +7,25 @@ define tomcat::server(
    $services  = {},
    $java_home = '/usr/lib/jvm/jre',
    $managed   = true,
+   $setenv    = [],
 ) {
 
    validate_re($ensure, '^(present|absent|running|stopped)$',
       "${ensure} is not supported for ensure. Allowed values are 'present', 'absent', 'running' and 'stopped'.")
    validate_bool($enable)
+   validate_hash($listeners)
+   validate_hash($resources)
+   validate_hash($services)
+   validate_array($setenv)
 
    require tomcat
 
    if $ensure != 'absent' {
       tomcat::server::install { $title: } ->
       tomcat::server::initialize { $title:
+         ensure    => present,
          java_home => $java_home,
+         setenv    => $setenv,
       } ~>
       tomcat::server::service { $title:
          ensure => $ensure,
@@ -41,6 +48,9 @@ define tomcat::server(
       tomcat::server::service { $title:
          ensure => stopped,
          enable => false,
+      } ->
+      tomcat::server::initialize { $title:
+         ensure => 'absent',
       } ->
       file { "${tomcat::basedir}/${title}":
          ensure  => absent,
