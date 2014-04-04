@@ -1,6 +1,6 @@
       <Resource name="<%= @resource %>" auth="<%= @auth %>"
-         type="<%= @type %>"
-<% @extra_attrs.each_pair do |key, value| -%>
-	 <%= key %>="<%= value %>"
+	        type="<%= @type %>"
+<% @extra_attrs.keys.sort.each do |key| -%>
+	       	 <%= key %>="<%= @extra_attrs[key] %>"
 <% end -%>
-         />
+			          />

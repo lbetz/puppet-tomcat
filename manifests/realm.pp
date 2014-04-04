@@ -38,7 +38,7 @@ define tomcat::realm(
 
    $basedir = "${tomcat::basedir}/${server}"
 
-   $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.each_pair do |key, value| -%> <%= key %>='<%= value %>'<% end -%>")
+   $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.keys.sort.each do |key| -%> <%= key %>='<%= @attrs[key] %>'<% end -%>")
 
    if $host {
       validate_string($host)
