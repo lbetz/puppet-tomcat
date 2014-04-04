@@ -68,4 +68,11 @@ define tomcat::host(
    create_resources(tomcat::realm,
       hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:"), values($realms))))
 
+   file { "/${basedir}/conf/${service}/${host}":
+      ensure => directory,
+      owner  => 'tomcat',
+      group  => 'adm',
+      mode   => '0570',
+   }
+
 }

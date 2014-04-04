@@ -54,4 +54,11 @@ define tomcat::service(
    create_resources(tomcat::engine,
       hash(zip(prefix(keys($engine), "${server}:${service}:"), values($engine))))
 
+   file { "${basedir}/conf/${service}":
+      ensure => directory,
+      owner  => 'tomcat',
+      group  => 'adm',
+      mode   => '0570',
+   }
+
 }
