@@ -24,17 +24,17 @@ define tomcat::server::initialize(
 
    file { "${basedir}/bin/setenv.sh":
       ensure  => file,
-      owner   => 'root',
+      owner   => $owner,
       group   => 'adm',
-      mode    => '0640',
+      mode    => '0570',
       content => template('tomcat/setenv.sh.erb'),
    }
 
    file { "${basedir}/bin/setenv-local.sh":
       ensure  => file,
-      owner   => 'root',
+      owner   => $owner,
       group   => 'adm',
-      mode    => '0640',
+      mode    => '0570',
    }
 
 }

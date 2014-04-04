@@ -30,7 +30,14 @@ define tomcat::server::install {
       mode   => '2570',
    }
 
-   file { ["${basedir}/lib", "${basedir}/private"]:
+   file { "${basedir}/lib":
+      ensure => directory,
+      owner  => 'root',
+      group  => 'adm',
+      mode   => '2775',
+   }
+
+   file { "${basedir}/private":
       ensure => directory,
       owner  => 'root',
       group  => 'adm',
