@@ -18,6 +18,7 @@ define tomcat::server(
    validate_hash($services)
    validate_array($setenv)
 
+   include concat::setup
    require tomcat
 
    if $ensure != 'absent' {

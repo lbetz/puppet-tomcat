@@ -44,7 +44,7 @@ class tomcat(
    validate_re($version, '^[6-7]$')
    validate_absolute_path($basedir)
 
-   $catalina_home   = $params::catalina_home
+   $catalina_home   = $params::config[$version]['catalina_home']
    $packages        = $params::config[$version]['packages']
    $service         = $params::config[$version]['service']
    $catalina_script = $params::config[$version]['catalina_script']
