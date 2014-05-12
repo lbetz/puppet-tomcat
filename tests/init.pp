@@ -13,11 +13,6 @@ class { 'tomcat':
    version => '7',
 } ->
 
-tomcat::server { 'myapp0':
-   ensure   => 'running',
-   managed  => false,
-}
-
 tomcat::server { 'myapp1':
    ensure   => 'running',
    enable   => false,
@@ -27,10 +22,10 @@ tomcat::server { 'myapp1':
       'Catalina' => { 
          'connectors' => {
             "http-8080" => {
-               port => '8080', address => '192.168.56.123', protocol => 'HTTP/1.1', redirect_port => '8443',
+               port => '8080', address => '192.168.56.202', protocol => 'HTTP/1.1', redirect_port => '8443',
             },
             "ajp-8009" => {
-               port => '8009', address => '192.168.56.123', protocol => 'AJP/1.3', redirect_port => '8443',
+               port => '8009', address => '192.168.56.202', protocol => 'AJP/1.3', redirect_port => '8443',
             }
          },
          'engine' => { 
@@ -93,7 +88,7 @@ tomcat::server { 'myapp1':
 } ->
 
 tomcat::server { 'myapp2':
-   ensure   => 'absent',
+   ensure   => running,
    enable   => false,
    port     => '8006',
    java_home => '/etc/alternatives/jre_1.6.0',

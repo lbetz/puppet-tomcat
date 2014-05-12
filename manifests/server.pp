@@ -51,7 +51,9 @@ define tomcat::server(
          enable => false,
       } ->
       tomcat::server::initialize { $title:
-         ensure => 'absent',
+         ensure => absent,
+         java_home => $java_home,
+         setenv    => $setenv,
       } ->
       file { "${tomcat::basedir}/${title}":
          ensure  => absent,

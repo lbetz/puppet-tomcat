@@ -22,19 +22,20 @@ define tomcat::server::initialize(
       content => template('tomcat/tomcat.init.erb'),
    }
 
-   file { "${basedir}/bin/setenv.sh":
-      ensure  => file,
-      owner   => $owner,
-      group   => 'adm',
-      mode    => '0570',
-      content => template('tomcat/setenv.sh.erb'),
-   }
+   if $ensure != 'absent' {
+      file { "${basedir}/bin/setenv.sh":
+         ensure  => file,
+         owner   => $owner,
+         group   => 'adm',
+         mode    => '0570',
+         content => template('tomcat/setenv.sh.erb'),
+      }
 
-   file { "${basedir}/bin/setenv-local.sh":
-      ensure  => file,
-      owner   => $owner,
-      group   => 'adm',
-      mode    => '0570',
+      file { "${basedir}/bin/setenv-local.sh":
+         ensure  => file,
+         owner   => $owner,
+         group   => 'adm',
+         mode    => '0570',
+      }
    }
-
 }
