@@ -20,27 +20,13 @@ define tomcat::connector(
 ) {
 
    $basedir = "${tomcat::basedir}/${server}"
-   $_name   = $connector
-   $_type   = 'connector'
+   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
-   concat::fragment { "server.xml-${name}-reference":
+   concat::fragment { "server.xml-${name}":
       target  => "${basedir}/conf/server.xml",
-      content => "   <!ENTITY connector-${connector} SYSTEM 'connector-${connector}.xml'>\n",
-      order   => '06',
-   }
-
-   concat::fragment { $name:
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "   &connector-${connector};\n",
-      order   => '10',
-   }
-
-   file { "${basedir}/conf/connector-${connector}.xml":
-      ensure  => file,
-      owner   => 'tomcat',
-      group   => 'adm',
-      mode    => '0460',
       content => template('tomcat/connector.xml.erb'),
+      order   => "50_${service}/10",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
    }
 
 }

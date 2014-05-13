@@ -16,10 +16,10 @@ define tomcat::resource(
 
    $basedir = "${tomcat::basedir}/${server}"
 
-   concat::fragment { $name:
+   concat::fragment { "server.xml-${name}":
       target  => "${basedir}/conf/server.xml",
       content => template('tomcat/resource.xml.erb'),
-      order   => '45',
+      order   => '35',
    }
 
 }

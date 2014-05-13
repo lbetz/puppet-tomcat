@@ -17,17 +17,20 @@ define tomcat::engine(
    validate_hash($realms)
 
    $basedir = "${tomcat::basedir}/${server}"
+   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
-   concat::fragment { "${name}-header":
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "\n   <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
-      order   => '80',
+   concat::fragment { "server.xml-${name}-header":
+      target  => "${basedir}/conf/server.xml",
+      content => "\n      <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
+      order   => "50_${service}/20",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
    }
 
-   concat::fragment { "${name}-footer":
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "\n   </Engine>\n",
-      order   => '89',
+   concat::fragment { "server.xml-${name}-footer":
+      target  => "${basedir}/conf/server.xml",
+      content => "\n      </Engine>\n",
+      order   => "50_${service}/89",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
    }
 
    create_resources(tomcat::host,

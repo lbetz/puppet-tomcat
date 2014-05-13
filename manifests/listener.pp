@@ -18,7 +18,7 @@ define tomcat::listener(
    concat::fragment { $name:
       target  => "${basedir}/conf/server.xml",
       content => inline_template("   <Listener className='<%= @class_name %>'<% if @ssl_engine %> SSLEngine='<%= @ssl_engine %>'<% end %>/>\n"),
-      order   => '30',
+      order   => '20',
    }
 
 }

@@ -15,50 +15,35 @@ define tomcat::service(
    validate_string($service)
 
    $basedir = "${tomcat::basedir}/${server}"
-   $_name   = $service
-   $_type   = 'service'
+   #$_name   = $service
+   #$_type   = 'service'
+   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
-   concat::fragment { "server.xml-${name}-reference":
+   file { "${::vardir}/concat/${_subdir}/fragments/50_${service}":
+      ensure => directory,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+   }
+
+   concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
-      content => "   <!ENTITY service-${service} SYSTEM 'service-${service}.xml'>\n",
-      order   => '05',
+      content => "\n   <Service name='${service}'>\n\n",
+      order   => "50_${service}/00",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
    }
 
-   concat::fragment { "server.xml-${name}-service":
+   concat::fragment { "server.xml-${name}-footer":
       target  => "${basedir}/conf/server.xml",
-      content => "   &service-${service};\n",
-      order   => '60',
+      content => "\n   </Service>\n",
+      order   => "50_${service}/99",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
    }
 
-   concat { "${basedir}/conf/service-${service}.xml":
-      owner  => 'tomcat',
-      group  => 'adm',
-      mode   => '0460',
-   }
-      
-   concat::fragment { "${name}-header":
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "<Service name='${service}'>\n\n",
-      order   => '00',
-   }
-
-   concat::fragment { "${name}-footer":
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "\n</Service>\n",
-      order   => '99',
-   }
-  
    create_resources(tomcat::connector,
       hash(zip(prefix(keys($connectors), "${server}:${service}:"), values($connectors))))
 
    create_resources(tomcat::engine,
       hash(zip(prefix(keys($engine), "${server}:${service}:"), values($engine))))
-
-   file { "${basedir}/conf/${service}":
-      ensure => directory,
-      owner  => 'tomcat',
-      group  => 'adm',
-      mode   => '0570',
-   }
 
 }

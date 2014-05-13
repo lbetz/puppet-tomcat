@@ -32,47 +32,32 @@ define tomcat::host(
    validate_string($host)
 
    $basedir = "${tomcat::basedir}/${server}"
-   $_name   = $host
-   $_type   = 'host'
+   #$_name   = $host
+   #$_type   = 'host'
+   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
-   concat::fragment { "server.xml-${name}-reference":
+   file { "${::vardir}/concat/${_subdir}/fragments/50_${service}/50_${host}":
+      ensure => directory,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+   }
+
+   concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
-      content => "   <!ENTITY host-${host} SYSTEM 'host-${host}.xml'>\n",
-      order   => '13',
-   }
-
-   concat::fragment { $name:
-      target  => "${basedir}/conf/service-${service}.xml",
-      content => "      &host-${host};\n",
-      order   => '87',
-   }
-
-   concat { "${basedir}/conf/host-${host}.xml":
-      owner  => 'tomcat',
-      group  => 'adm',
-      mode   => '0460',
-   }
-
-   concat::fragment { "${name}-header":
-      target  => "${basedir}/conf/host-${host}.xml",
       content => template('tomcat/host-header.xml.erb'),
-      order   => '00',
+      order   => "50_${service}/50_${host}/00",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}/50_${host}"],
    }
 
-   concat::fragment { "${name}-footer":
-      target  => "${basedir}/conf/host-${host}.xml",
-      content => "\n</Host>\n",
-      order   => '99',
+   concat::fragment { "server.xml-${name}-footer":
+      target  => "${basedir}/conf/server.xml",
+      content => "\n         </Host>\n",
+      order   => "50_${service}/50_${host}/99",
+      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}/50_${host}"],
    }
 
    create_resources(tomcat::realm,
       hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:"), values($realms))))
-
-   file { "/${basedir}/conf/${service}/${host}":
-      ensure => directory,
-      owner  => 'tomcat',
-      group  => 'adm',
-      mode   => '0570',
-   }
 
 }

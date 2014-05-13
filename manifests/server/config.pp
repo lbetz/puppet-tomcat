@@ -24,24 +24,24 @@ define tomcat::server::config(
    concat::fragment { "server.xml-${server}-server":
       target  => "${basedir}/conf/server.xml",
       content => "]>\n\n<Server port='${port}' shutdown='SHUTDOWN'>\n",
-      order   => '20',
+      order   => '10',
    }
 
    concat::fragment { "server.xml-${server}-globalresources-header":
       target  => "${basedir}/conf/server.xml",
       content => "\n   <GlobalNamingResources>\n",
-      order   => '40',
+      order   => '30',
    }
 
    concat::fragment { "server.xml-${server}-globalresources-footer":
       target  => "${basedir}/conf/server.xml",
       content => "   </GlobalNamingResources>\n\n",
-      order   => '49',
+      order   => '39',
    }
 
    concat::fragment { "server.xml-${server}-footer":
       target  => "${basedir}/conf/server.xml",
-      content => "\n</Server>",
+      content => "\n</Server>\n",
       order   => '99',
    }
 
