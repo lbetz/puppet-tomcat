@@ -1,3 +1,56 @@
+# == Define Resource: tomcat::connector
+#
+# Full description of define tomcat::connector here.
+#
+# === Parameters
+#
+# Using titles like 'server:service:connector' are split off automaticly in parameters 'server',
+# 'service' and 'connector'. That defines the 'connector' in section 'service' in the configuration
+# file server.xml for tomcat server 'server'. 
+#
+# [*server*]
+#    Name of tomcat server instance to add the connector.
+#    automaticly taken from 'title' then using 'title' like 'server:service:connector' otherwise undef
+#
+# [*service*]
+#    Name of tomcat service to add the connector.
+#    automaticly taken from 'title' then using 'title' like 'server:service:connector' otherwise undef
+#
+# [*connector*]
+#    Name of connector.
+#    automaticly taken from 'title' then using 'title' like 'server:service:connector' otherwise undef
+#
+# [*uri_encoding*]
+#    accepted encoding
+#
+# [*port*]
+#    listen port, default 8080 (HTTP/1.1)
+#
+# [*address*]
+#    address to bind, default is false that means bind to localhost
+#
+# [*protocol*]
+#    supported protocols are HTTP/1.1 (default) and AJP/1.3
+#
+# [*connection_timeout*]
+#    see tomcat documentation
+#
+# [*redirect_port*]
+#    see tomcat documentation
+#
+# [*options*]
+#    see tomcat documentation
+#
+# [*scheme*]
+#    see tomcat documentation
+#
+# [*executor*]
+#    see tomcat documentation
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::connector(
    $server             = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
       $name   => undef,

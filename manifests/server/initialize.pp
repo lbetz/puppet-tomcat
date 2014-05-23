@@ -1,3 +1,24 @@
+# == private Define Resource: tomcat::server::initialize
+#
+# Full description of define tomcat::server::initialize here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*ensure*]
+#   present or running (present), stopped
+#
+# [*java_home*]
+#   java_home directory where to find the java binary
+#
+# [*setenv*]
+#   Handles environment variables in 'bin/setenv-local.sh'.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::initialize(
    $ensure = 'present',
    $java_home,

@@ -1,3 +1,27 @@
+# == private Define Resource: tomcat::server::config
+#
+# Full description of define tomcat::server::config here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*listeners*]
+#   Hash of listeners in the global server section (server.xml).
+#
+# [*port*]
+#   Management port (default 8005) on localhost for this instance.
+#
+# [*resources*]
+#   Hash of global resources in the server section (server.xml).
+#
+# [*services*]
+#   Hash of services and their attributes.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::config(
    $port,
    $services,

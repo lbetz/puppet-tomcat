@@ -1,3 +1,9 @@
+# == private Define Resource: tomcat::server::install
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::install {
 
    $basedir         = "${tomcat::basedir}/${title}"

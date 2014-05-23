@@ -1,3 +1,43 @@
+# == Define Resource: tomcat::realm
+#
+# Full description of define tomcat::realm here.
+#
+# === Parameters
+#
+# Using titles like 'server:service:engine:host:realm:class_name' are split off automaticly in parameters 'server',
+# 'service', 'engine', 'host' and 'realm'. That defines a realm in 'host' of the 'engine' in section
+# 'service' of the configuration file 'server.xml' for tomcat server instance 'server'.
+#
+# [*server*]
+#    Name of tomcat server instance to add the connector.
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
+#
+# [*service*]
+#    Name of tomcat engine to add the service 'service'.
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
+#
+# [*engine*]
+#    Name of the engine.
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
+#
+# [*realm*]
+#    Name of the engine.
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
+#
+# [*class_name*]
+#    Classname used for this realm.
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
+#
+# [*attrs*]
+#    Hash of attributes defined for this realm.
+#
+# [*realms*]
+#    Hash of realms defined under this realm.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::realm(
   $attrs         = {},
   $realms        = {},
