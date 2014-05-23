@@ -2,7 +2,7 @@ name    'lbetz-tomcat'
 version '0.1.0'
 source 'https://github.com/lbetz/netways-tomcat'
 author 'Lennart Betz'
-license 'Apache License, Version 2.0'
+license 'GPL v2'
 summary 'Setup and configure Apache Tomcat'
 description 'Setup and configure Apache Tomcat'
 
