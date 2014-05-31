@@ -143,6 +143,12 @@ define tomcat::server(
    require tomcat
 
    if $ensure != 'absent' {
+
+      anchor { "tomact::server::${title}::begin":
+         before => Tomcat::Server::Install[$title],
+         notify => Tomcat::Server::Service[$title],
+      }
+
       tomcat::server::install { $title: } ->
       tomcat::server::initialize { $title:
          ensure    => present,
@@ -165,8 +171,14 @@ define tomcat::server(
          }
       }
 
+      anchor { "tomact::server::${title}::end":
+         require => Tomcat::Server::Service[$title],
+      }
+
    }
    else {
+
+      anchor { "tomact::server::${title}::begin": } ->
       tomcat::server::service { $title:
          ensure => stopped,
          enable => false,
@@ -180,7 +192,8 @@ define tomcat::server(
          ensure  => absent,
          recurse => true,
          force   => true,
-      }
+      } ->
+      anchor { "tomact::server::${title}::end": }
    }
    
 }

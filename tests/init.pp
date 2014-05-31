@@ -10,14 +10,14 @@
 # http://docs.puppetlabs.com/guides/tests_smoke.html
 #
 class { 'tomcat':
-   version => '7',
+   version => '6',
 } ->
 
 tomcat::server { 'myapp1':
    ensure   => 'running',
    enable   => false,
    port     => '8005',
-   java_home => '/etc/alternatives/jre_1.7.0',
+   java_home => '/etc/alternatives/jre_1.6.0',
    services => { 
       'Catalina' => { 
          'connectors' => {

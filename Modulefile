@@ -1,10 +1,10 @@
 name    'lbetz-tomcat'
-version '0.1.0'
+version '0.1.1'
 source 'https://github.com/lbetz/netways-tomcat'
 author 'Lennart Betz'
 license 'GPL v2'
 summary 'Setup and configure Apache Tomcat'
 description 'Setup and configure Apache Tomcat'
 
-'puppetlabs/stdlib' >= '4.1.0'
-'puppetlabs/concat' >= '1.0.2'
+'puppetlabs/stdlib' >= '3.2.1'
+'puppetlabs/concat' >= '1.0.0'
