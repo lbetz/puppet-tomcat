@@ -78,8 +78,7 @@ define tomcat::host(
    validate_string($host)
 
    $basedir = "${tomcat::basedir}/${server}"
-   #$_name   = $host
-   #$_type   = 'host'
+   $owner   = $params::owner
    $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
    file { "${::concat_basedir}/${_subdir}/fragments/50_${service}/50_${host}":
@@ -101,6 +100,13 @@ define tomcat::host(
       content => "\n         </Host>\n",
       order   => "50_${service}/50_${host}/99",
       require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}/50_${host}"],
+   }
+
+   file { "${basedir}/conf/${service}/${host}":
+      ensure => directory,
+      owner  => $owner,
+      group  => 'adm',
+      mode   => '2750',
    }
 
    create_resources(tomcat::realm,

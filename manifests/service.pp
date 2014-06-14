@@ -15,8 +15,6 @@ define tomcat::service(
    validate_string($service)
 
    $basedir = "${tomcat::basedir}/${server}"
-   #$_name   = $service
-   #$_type   = 'service'
    $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
    file { "${::concat_basedir}/${_subdir}/fragments/50_${service}":

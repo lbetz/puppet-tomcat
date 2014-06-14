@@ -52,6 +52,7 @@ define tomcat::engine(
    validate_hash($realms)
 
    $basedir = "${tomcat::basedir}/${server}"
+   $owner   = $params::owner
    $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
    concat::fragment { "server.xml-${name}-header":
@@ -66,6 +67,13 @@ define tomcat::engine(
       content => "\n      </Engine>\n",
       order   => "50_${service}/89",
       require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+   }
+
+   file { "${basedir}/conf/${engine}":
+      ensure => directory,
+      owner  => $owner,
+      group  => 'adm',
+      mode   => '2750',
    }
 
    create_resources(tomcat::host,
