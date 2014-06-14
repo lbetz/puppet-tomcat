@@ -27,7 +27,7 @@
 #    listen port, default 8080 (HTTP/1.1)
 #
 # [*address*]
-#    address to bind, default is false that means bind to localhost
+#    address to bind, default is false that means bind to all interfaces
 #
 # [*protocol*]
 #    supported protocols are HTTP/1.1 (default) and AJP/1.3

@@ -22,10 +22,10 @@ tomcat::server { 'myapp1':
       'Catalina' => { 
          'connectors' => {
             "http-8080" => {
-               port => '8080', address => '192.168.56.202', protocol => 'HTTP/1.1', redirect_port => '8443',
+               port => '8080', protocol => 'HTTP/1.1', redirect_port => '8443',
             },
             "ajp-8009" => {
-               port => '8009', address => '192.168.56.202', protocol => 'AJP/1.3', redirect_port => '8443',
+               port => '8009', protocol => 'AJP/1.3', redirect_port => '8443',
             }
          },
          'engine' => { 
@@ -96,10 +96,10 @@ tomcat::server { 'myapp2':
       'Catalina' => { 
          'connectors' => {
             "http-8080" => {
-               port => '8080', address => '127.0.0.1', protocol => 'HTTP/1.1', redirect_port => '8443',
+               port => '8081', address => '127.0.0.1', protocol => 'HTTP/1.1', redirect_port => '8443',
             },
             "ajp-8009" => {
-               port => '8009', address => '127.0.0.1', protocol => 'AJP/1.3', redirect_port => '8443',
+               port => '8010', address => '127.0.0.1', protocol => 'AJP/1.3', redirect_port => '8443',
             },
          },
          'engine' => { 
