@@ -79,7 +79,7 @@ define tomcat::connector(
       target  => "${basedir}/conf/server.xml",
       content => template('tomcat/connector.xml.erb'),
       order   => "50_${service}/10",
-      require => File["${::vardir}/concat/${_subdir}/fragments/50_${service}"],
+      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
    }
 
 }
