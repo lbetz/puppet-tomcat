@@ -6,7 +6,7 @@
   "license": "GPL v2",
   "project_page": "http://github.com/lbetz/puppet-tomcat",
   "description": "Setup and configure Apache Tomcat",
-  "summary": "Setup and configure Apache Tomcat"
+  "summary": "Setup and configure Apache Tomcat",
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
@@ -17,7 +17,9 @@
     }
   ],
   "requirements": [
-    { "name": "puppet", "version_requirement": "3.x" }
+    { "name": "puppet", "version_requirement": "3.x" },
+    { "name": "puppetlabs/stdlib", "version_requirement": ">=3.2.1" },
+    { "name": "puppetlabs/concat", "version_requirement": ">=1.0.1" }
   ],
   "dependencies": [
     {
@@ -28,5 +30,5 @@
       "version_requirement": ">=1.0.1",
       "name": "puppetlabs/concat"
     }
-  ],
+  ]
 }
