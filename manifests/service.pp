@@ -15,27 +15,17 @@ define tomcat::service(
    validate_string($service)
 
    $basedir = "${tomcat::basedir}/${server}"
-   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
-
-   file { "${::concat_basedir}/${_subdir}/fragments/50_${service}":
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-   }
 
    concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
       content => "\n   <Service name='${service}'>\n\n",
-      order   => "50_${service}/00",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+      order   => "50_${service}_00",
    }
 
    concat::fragment { "server.xml-${name}-footer":
       target  => "${basedir}/conf/server.xml",
       content => "\n   </Service>\n",
-      order   => "50_${service}/99",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+      order   => "50_${service}_99",
    }
 
    create_resources(tomcat::connector,

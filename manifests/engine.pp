@@ -53,20 +53,17 @@ define tomcat::engine(
 
    $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
-   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
    concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
       content => "\n      <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
-      order   => "50_${service}/20",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+      order   => "50_${service}_20",
    }
 
    concat::fragment { "server.xml-${name}-footer":
       target  => "${basedir}/conf/server.xml",
       content => "\n      </Engine>\n",
-      order   => "50_${service}/89",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+      order   => "50_${service}_89",
    }
 
    file { "${basedir}/conf/${engine}":

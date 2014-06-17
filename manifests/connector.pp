@@ -73,13 +73,11 @@ define tomcat::connector(
 ) {
 
    $basedir = "${tomcat::basedir}/${server}"
-   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
 
    concat::fragment { "server.xml-${name}":
       target  => "${basedir}/conf/server.xml",
       content => template('tomcat/connector.xml.erb'),
-      order   => "50_${service}/10",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}"],
+      order   => "50_${service}_10",
    }
 
 }

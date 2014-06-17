@@ -79,27 +79,17 @@ define tomcat::host(
 
    $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
-   $_subdir = regsubst("${basedir}/conf/server.xml", '\/', '_', 'G')
-
-   file { "${::concat_basedir}/${_subdir}/fragments/50_${service}/50_${host}":
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-   }
 
    concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
       content => template('tomcat/host-header.xml.erb'),
-      order   => "50_${service}/50_${host}/00",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}/50_${host}"],
+      order   => "50_${service}_50_${host}_00",
    }
 
    concat::fragment { "server.xml-${name}-footer":
       target  => "${basedir}/conf/server.xml",
       content => "\n         </Host>\n",
-      order   => "50_${service}/50_${host}/99",
-      require => File["${::concat_basedir}/${_subdir}/fragments/50_${service}/50_${host}"],
+      order   => "50_${service}_50_${host}_99",
    }
 
    file { "${basedir}/conf/${service}/${host}":

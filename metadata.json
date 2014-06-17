@@ -6,7 +6,7 @@
       "name": "puppetlabs/stdlib"
     },
     {
-      "version_requirement": "<=1.0.0",
+      "version_requirement": "=>1.0.1",
       "name": "puppetlabs/concat"
     }
   ],
@@ -21,7 +21,7 @@
   ],
   "project_page": "http://github.com/lbetz/puppet-tomcat",
   "name": "lbetz-tomcat",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "source": "git://github.com/lbetz/puppet-tomcat",
   "license": "GPL v2",
   "description": "Setup and configure Apache Tomcat",
