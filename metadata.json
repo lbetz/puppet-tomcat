@@ -1,15 +1,12 @@
 {
   "author": "Lennart Betz",
-  "dependencies": [
-    {
-      "version_requirement": ">=3.2.1",
-      "name": "puppetlabs/stdlib"
-    },
-    {
-      "version_requirement": "=>1.0.1",
-      "name": "puppetlabs/concat"
-    }
-  ],
+  "name": "lbetz-tomcat",
+  "version": "0.1.3",
+  "source": "git://github.com/lbetz/puppet-tomcat",
+  "license": "GPL v2",
+  "project_page": "http://github.com/lbetz/puppet-tomcat",
+  "description": "Setup and configure Apache Tomcat",
+  "summary": "Setup and configure Apache Tomcat"
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
@@ -19,14 +16,17 @@
       ]
     }
   ],
-  "project_page": "http://github.com/lbetz/puppet-tomcat",
-  "name": "lbetz-tomcat",
-  "version": "0.1.3",
-  "source": "git://github.com/lbetz/puppet-tomcat",
-  "license": "GPL v2",
-  "description": "Setup and configure Apache Tomcat",
-  "types": [
-
+  "requirements": [
+    { "name": "puppet", "version_requirement": "3.x" }
   ],
-  "summary": "Setup and configure Apache Tomcat"
+  "dependencies": [
+    {
+      "version_requirement": ">=3.2.1",
+      "name": "puppetlabs/stdlib"
+    },
+    {
+      "version_requirement": ">=1.0.1",
+      "name": "puppetlabs/concat"
+    }
+  ],
 }
