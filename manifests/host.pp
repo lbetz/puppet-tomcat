@@ -79,6 +79,7 @@ define tomcat::host(
 
    $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
+   $group   = $params::group
 
    concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
@@ -95,7 +96,7 @@ define tomcat::host(
    file { "${basedir}/conf/${service}/${host}":
       ensure => directory,
       owner  => $owner,
-      group  => 'adm',
+      group  => $group,
       mode   => '2750',
    }
 

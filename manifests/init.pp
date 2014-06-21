@@ -61,7 +61,7 @@ class tomcat(
    file { "${catalina_home}/bin/setclasspath.sh":
       ensure  => file,
       owner   => 'root',
-      group   => 'adm',
+      group   => $group,
       mode    => '0664',
       source  => 'puppet:///modules/tomcat/setclasspath.sh',
    } ->

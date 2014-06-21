@@ -32,10 +32,11 @@ define tomcat::server::config(
    $server  = $title
    $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
+   $group   = $params::group
 
    concat { "${basedir}/conf/server.xml":
       owner   => $owner,
-      group   => 'adm',
+      group   => $group,
       mode    => '0460',
    }
 
@@ -72,7 +73,7 @@ define tomcat::server::config(
    file { "${basedir}/conf/web.xml":
       ensure => file,
       owner => $owner,
-      group => 'adm',
+      group => $group,
       mode  => '0460',
       source => 'puppet:///modules/tomcat/web.xml',
    }

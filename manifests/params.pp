@@ -7,6 +7,7 @@ class tomcat::params {
       'redhat': {
          $basedir = '/var/tomcat'
          $owner   = 'tomcat'
+         $group   = 'adm'
          $config  = { '6' => {
                          'catalina_home'   => '/usr/share/tomcat6',
                          'catalina_script' => '/usr/sbin/tomcat6',

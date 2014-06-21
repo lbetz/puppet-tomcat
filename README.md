@@ -1,4 +1,4 @@
-lbetz-tomcat
+puppet-tomcat
 ==============
 
 Setup and manage Apache Tomcat for multiple instances. For more documentation

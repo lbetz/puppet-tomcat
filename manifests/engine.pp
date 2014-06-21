@@ -53,6 +53,7 @@ define tomcat::engine(
 
    $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
+   $group   = $params::group
 
    concat::fragment { "server.xml-${name}-header":
       target  => "${basedir}/conf/server.xml",
@@ -69,7 +70,7 @@ define tomcat::engine(
    file { "${basedir}/conf/${engine}":
       ensure => directory,
       owner  => $owner,
-      group  => 'adm',
+      group  => $group,
       mode   => '2750',
    }
 

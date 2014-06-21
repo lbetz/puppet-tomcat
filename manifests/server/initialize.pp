@@ -31,6 +31,7 @@ define tomcat::server::initialize(
    $server          = $title
    $basedir         = "${tomcat::basedir}/${server}"
    $owner           = $params::owner
+   $group           = $params::group
 
    file { "/etc/init.d/tomcat-${title}":
       ensure => $ensure ? {
@@ -47,7 +48,7 @@ define tomcat::server::initialize(
       file { "${basedir}/bin/setenv.sh":
          ensure  => file,
          owner   => $owner,
-         group   => 'adm',
+         group   => $group,
          mode    => '0570',
          content => template('tomcat/setenv.sh.erb'),
       }
@@ -55,7 +56,7 @@ define tomcat::server::initialize(
       file { "${basedir}/bin/setenv-local.sh":
          ensure  => file,
          owner   => $owner,
-         group   => 'adm',
+         group   => $group,
          mode    => '0570',
       }
    }
