@@ -31,13 +31,11 @@ define tomcat::server::config(
 
    $server  = $title
    $basedir = "${tomcat::basedir}/${server}"
-   $owner   = $params::owner
-   $group   = $params::group
 
    concat { "${basedir}/conf/server.xml":
-      owner   => $owner,
-      group   => $group,
-      mode    => '0460',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0664',
    }
 
    concat::fragment { "server.xml-${server}-header":
@@ -72,9 +70,9 @@ define tomcat::server::config(
 
    file { "${basedir}/conf/web.xml":
       ensure => file,
-      owner => $owner,
-      group => $group,
-      mode  => '0460',
+      owner => 'root',
+      group => 'root',
+      mode  => '0664',
       source => 'puppet:///modules/tomcat/web.xml',
    }
 

@@ -13,43 +13,50 @@ define tomcat::server::install {
    file { $basedir:
       ensure => directory,
       owner  => 'root',
-      group  => $group,
-      mode   => '0555',
+      group  => 'wheel',
+      mode   => '0755',
    }
    
-   file { ["${basedir}/logs", "${basedir}/temp", "${basedir}/work", "${basedir}/webapps"]:
+   file { "${basedir}/logs":
       ensure => directory,
       owner  => $owner,
-      group  => $group,
+      group  => 'root',
       mode   => '0755',
+   }
+
+   file { ["${basedir}/temp", "${basedir}/work", "${basedir}/webapps"]:
+      ensure => directory,
+      owner  => 'root',
+      group  => $group,
+      mode   => '0775',
    }
    
    file { "${basedir}/bin":
       ensure => directory,
       owner  => 'root',
-      group  => $group,
+      group  => 'root',
       mode   => '0755',
    }
 
    file { "${basedir}/conf":
-      ensure => directory,
-      owner  => $owner,
-      group  => $group,
-      mode   => '2570',
-   }
-
-   file { "${basedir}/lib":
       ensure => directory,
       owner  => 'root',
       group  => $group,
       mode   => '2775',
    }
 
-   file { "${basedir}/private":
+   file { "${basedir}/lib":
       ensure => directory,
       owner  => 'root',
-      group  => $group,
-      mode   => '2770',
+      group  => 'root',
+      mode   => '0755',
    }
+
+   #file { "${basedir}/private":
+   #   ensure => directory,
+   #   owner  => 'root',
+   #   group  => $group,
+   #   mode   => '2770',
+   #}
 
 }
