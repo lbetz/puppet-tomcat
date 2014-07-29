@@ -15,15 +15,25 @@
 # === Authors
 #
 # Author Lennart Betz <lennart.betz@netways.de>
+
 define tomcat::server::service(
    $ensure = 'running',
    $enable = true,
 ) {
 
-   service { "tomcat-${title}":
+   # standalone
+   if $tomcat::config {
+      $service = $tomcat::service
+   }
+   # multi instance
+   else {
+      $service = "tomcat-${title}"
+   }
+
+   service { $service:
       ensure => $ensure ? {
-         absent   => stopped,
-         stopped  => stopped,
+         absent   => 'stopped',
+         stopped  => 'stopped',
          default  => 'running',
       },
       enable => $enable,

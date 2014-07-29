@@ -25,15 +25,28 @@ define tomcat::server::initialize(
    $setenv,
 ) {
 
+   # used by init script
    $version         = $tomcat::version
-   $catalina_home   = $params::config[$version]['catalina_home']
-   $catalina_script = $params::config[$version]['catalina_script']
+   $catalina_home   = $params::conf[$version]['catalina_home']
+   $catalina_script = $params::conf[$version]['catalina_script']
    $server          = $title
-   $basedir         = "${tomcat::basedir}/${server}"
    $owner           = $params::owner
    $group           = $params::group
 
-   file { "/etc/init.d/tomcat-${title}":
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $bindir  = $params::conf[$version]['bindir']
+      $initd   = $title
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $bindir  = "${basedir}/bin"
+      $initd   = "tomcat-${title}"
+   }
+
+   file { "/etc/init.d/${initd}":
       ensure => $ensure ? {
          absent  => 'absent',
          default => file,
@@ -45,7 +58,7 @@ define tomcat::server::initialize(
    }
 
    if $ensure != 'absent' {
-      file { "${basedir}/bin/setenv.sh":
+      file { "${bindir}/setenv.sh":
          ensure  => file,
          owner   => $owner,
          group   => $group,
@@ -53,7 +66,7 @@ define tomcat::server::initialize(
          content => template('tomcat/setenv.sh.erb'),
       }
 
-      file { "${basedir}/bin/setenv-local.sh":
+      file { "${bindir}/setenv-local.sh":
          ensure  => file,
          owner   => $owner,
          group   => $group,

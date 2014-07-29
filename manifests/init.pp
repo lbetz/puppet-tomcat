@@ -1,6 +1,7 @@
 # == Class: tomcat
 #
-# This class installs the tomcat software and stops the standalone server.
+# This class installs the tomcat software and stops the standalone server, then 'config' is
+# set to 'false'. Otherwise for standalone use 'config' as hash to configure the server.
 #
 # === Parameters
 #
@@ -12,8 +13,13 @@
 # [*release*]
 #    valid values are 'latest', 'installed' or exact release version, i.e. '6.0.24-64.el6_5'
 #
+# [*config*]
+#    Hash to configure a standalone server with the distribution layout. Default is 'false',
+#    that means you wanna use more than one instance.
+#
 # [*basedir*]
-#    Base directory where to install server instance and their configurations.
+#    Base directory where to install server instance and their configurations. Directory 
+#    'basedir' has to exist. Ignored for multi instance setup (config => false).
 #
 # === Examples
 #
@@ -23,31 +29,36 @@
 #    basedir => '/var/tomcat',
 #  }
 #
+#
+# Standalone or distro like file layout
+#
+#  class { tomcat:
+#    version => '6',
+#    release => '6.0.24-64.el6_5',
+#    config  => {},
+#  }
+#
 # === Authors
 #
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 class tomcat(
-   $version = $params::version,
-   $release = 'installed',
-   $basedir = $params::basedir,
+   $version    = $params::version,
+   $release    = 'installed',
+   $basedir    = $params::basedir,
+   $config     = false,
 ) inherits tomcat::params {
 
    validate_re($version, '^[6-7]$')
    validate_absolute_path($basedir)
 
-   $catalina_home   = $params::config[$version]['catalina_home']
-   $packages        = $params::config[$version]['packages']
-   $service         = $params::config[$version]['service']
-   $catalina_script = $params::config[$version]['catalina_script']
+   $catalina_home   = $params::conf[$version]['catalina_home']
+   $packages        = $params::conf[$version]['packages']
+   $service         = $params::conf[$version]['service']
+   $catalina_script = $params::conf[$version]['catalina_script']
 
    package { $packages:
       ensure => $release,
-   } ->
-
-   service { $service:
-      ensure => stopped,
-      enable => false,
    } ->
 
    file { $catalina_script:
@@ -64,15 +75,30 @@ class tomcat(
       group   => $group,
       mode    => '0664',
       source  => 'puppet:///modules/tomcat/setclasspath.sh',
-   } ->
+   }
 
-   file { "/etc/init.d/${service}":
-      ensure => file,
-      mode   => '0644',
-   } ->
+   if ! $config {
+      file { "/etc/init.d/${service}":
+         ensure => file,
+         mode   => '0644',
+         require => File["${catalina_home}/bin/setclasspath.sh"],
+      } ->
 
-   file { $basedir:
-      ensure => directory,
+      file { $basedir:
+         ensure => directory,
+         owner  => 'root',
+         group  => 'root',
+         mode   => '0755',
+      } ->
+      
+      service { $service:
+         ensure => stopped,
+         enable => false,
+      }
+   }
+   else {
+      # for standalone name define resource tomcat::server to 'tomcat6' or 'tomcat'
+      tomcat::server { $service: }
    }
 
 }

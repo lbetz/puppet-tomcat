@@ -131,6 +131,10 @@ define tomcat::server(
    $setenv    = [],
 ) {
 
+   if defined(Tomcat::Server[$tomcat::service]) and $title != $tomcat::service {
+      fail('Your using tomcat as standalone server')
+   }
+
    validate_re($ensure, '^(present|absent|running|stopped)$',
       "${ensure} is not supported for ensure. Allowed values are 'present', 'absent', 'running' and 'stopped'.")
    validate_bool($enable)
@@ -139,7 +143,18 @@ define tomcat::server(
    validate_hash($services)
    validate_array($setenv)
 
-   require tomcat
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+   }
+
+   #require tomcat
 
    if $ensure != 'absent' {
 
@@ -187,7 +202,7 @@ define tomcat::server(
          java_home => $java_home,
          setenv    => $setenv,
       } ->
-      file { "${tomcat::basedir}/${title}":
+      file { $basedir:
          ensure  => absent,
          recurse => true,
          force   => true,

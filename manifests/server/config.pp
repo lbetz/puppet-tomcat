@@ -30,45 +30,56 @@ define tomcat::server::config(
 ) {
 
    $server  = $title
-   $basedir = "${tomcat::basedir}/${server}"
+   $version = $tomcat::version
 
-   concat { "${basedir}/conf/server.xml":
+   # standalone
+   if $tomcat::config {
+      $basedir   = $params::conf[$version]['catalina_home']
+      $confdir   = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir   = "${tomcat::basedir}/${title}"
+      $confdir   = "${basedir}/conf"
+   }
+
+   concat { "${confdir}/server.xml":
       owner   => 'root',
       group   => 'root',
       mode    => '0664',
    }
 
    concat::fragment { "server.xml-${server}-header":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "<?xml version='1.0' encoding='utf-8'?>\n<!DOCTYPE server-xml [\n",
       order   => '00',
    }
 
    concat::fragment { "server.xml-${server}-server":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "]>\n\n<Server port='${port}' shutdown='SHUTDOWN'>\n",
       order   => '10',
    }
 
    concat::fragment { "server.xml-${server}-globalresources-header":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n   <GlobalNamingResources>\n",
       order   => '30',
    }
 
    concat::fragment { "server.xml-${server}-globalresources-footer":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "   </GlobalNamingResources>\n\n",
       order   => '39',
    }
 
    concat::fragment { "server.xml-${server}-footer":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n</Server>\n",
       order   => '99',
    }
 
-   file { "${basedir}/conf/web.xml":
+   file { "${confdir}/web.xml":
       ensure => file,
       owner => 'root',
       group => 'root',
