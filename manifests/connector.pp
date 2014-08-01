@@ -72,10 +72,21 @@ define tomcat::connector(
    $executor           = false,
 ) {
 
-   $basedir = "${tomcat::basedir}/${server}"
+   $version         = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    concat::fragment { "server.xml-${name}":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => template('tomcat/connector.xml.erb'),
       order   => "50_${service}_10",
    }

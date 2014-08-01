@@ -1,12 +1,15 @@
-2014-07-04 0.2.0
+2014-08-01 0.2.0
 
 Summary
 
 Added feature standalone for using Tomcat standalone on a CentOS.
 
 Features:
+- standalone server, using standard paths
+
+Fixes:
 - changed owner, group and permission to CentOS like
--
+- fixed combined or lookout realms (nested realms to realm)
 
 2014-06-17 0.1.3
 

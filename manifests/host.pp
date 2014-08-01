@@ -77,23 +77,34 @@ define tomcat::host(
    validate_string($engine)
    validate_string($host)
 
-   $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
    $group   = $params::group
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    concat::fragment { "server.xml-${name}-header":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => template('tomcat/host-header.xml.erb'),
       order   => "50_${service}_50_${host}_00",
    }
 
    concat::fragment { "server.xml-${name}-footer":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n         </Host>\n",
       order   => "50_${service}_50_${host}_99",
    }
 
-   file { "${basedir}/conf/${service}/${host}":
+   file { "${confdir}/${service}/${host}":
       ensure => directory,
       owner  => $owner,
       group  => $group,

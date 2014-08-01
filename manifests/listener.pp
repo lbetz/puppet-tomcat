@@ -38,10 +38,21 @@ define tomcat::listener(
    validate_string($server)
    validate_string($class_name)
 
-   $basedir = "${tomcat::basedir}/${server}"
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    concat::fragment { $name:
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => inline_template("   <Listener className='<%= @class_name %>'<% if @ssl_engine %> SSLEngine='<%= @ssl_engine %>'<% end %>/>\n"),
       order   => '20',
    }

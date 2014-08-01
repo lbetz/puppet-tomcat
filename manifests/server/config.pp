@@ -51,13 +51,13 @@ define tomcat::server::config(
 
    concat::fragment { "server.xml-${server}-header":
       target  => "${confdir}/server.xml",
-      content => "<?xml version='1.0' encoding='utf-8'?>\n<!DOCTYPE server-xml [\n",
+      content => "<?xml version='1.0' encoding='utf-8'?>\n",
       order   => '00',
    }
 
    concat::fragment { "server.xml-${server}-server":
       target  => "${confdir}/server.xml",
-      content => "]>\n\n<Server port='${port}' shutdown='SHUTDOWN'>\n",
+      content => "\n<Server port='${port}' shutdown='SHUTDOWN'>\n",
       order   => '10',
    }
 

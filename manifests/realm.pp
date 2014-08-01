@@ -20,6 +20,8 @@
 #    Name of the engine.
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
 #
+# [*host*]
+#
 # [*realm*]
 #    Name of the engine.
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
@@ -58,9 +60,9 @@ define tomcat::realm(
     '*'     => undef,
     default => regsubst($name, '^[^:]+:[^:]+:[^:]+:([^:]+):.*$', '\1'),
   },
-  $realm         = regsubst($name, '^[^:]+:[^:]+:[^:]+:[^:]:([^:]+):.*$', '\1') ? {
+  $realm         = regsubst($name, '^[^:]+:[^:]+:[^:]+:[^:]+:([^:]+):.*$', '\1') ? {
     $name   => undef,
-    default => regsubst($name, '^[^:]+:[^:]+:[^:]+:[^:]:([^:]+):.*$', '\1'),
+    default => regsubst($name, '^[^:]+:[^:]+:[^:]+:[^:]+:([^:]+):.*$', '\1'),
   },
   $class_name    = regsubst($name, '^.*:([^:]+)$', '\1') ? {
     $name   => undef,
@@ -76,7 +78,18 @@ define tomcat::realm(
    validate_string($realm)
    validate_string($class_name)
 
-   $basedir = "${tomcat::basedir}/${server}"
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.keys.sort.each do |key| -%> <%= key %>='<%= @attrs[key] %>'<% end -%>")
 
@@ -84,43 +97,61 @@ define tomcat::realm(
       validate_string($host)
       if $realms != {} {
          concat::fragment { "server.xml-${name}-header":
-            target  => "${basedir}/conf/server.xml",
+            target  => "${confdir}/server.xml",
             content => "            ${_content}>\n",
-            order   => "50_${service}_50_${host}_20",
+            order   => "50_${service}_50_${host}_22_${class_name}_00",
          }
          concat::fragment { "server.xml-${name}-footer":
-            target  => "${basedir}/conf/server.xml",
+            target  => "${confdir}/server.xml",
             content => "            </Realm>\n",
-            order   => "50_${service}_50_${host}_21",
+            order   => "50_${service}_50_${host}_22_${class_name}_99",
          }
          create_resources(tomcat::realm,
             hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:${class_name}:"), values($realms))))
       } else {
-         concat::fragment { "server.xml-${name}":
-            target  => "${basedir}/conf/server.xml",
-            content => "            ${_content} />\n",
-            order   => "50_${service}_50_${host}_23",
+         if $realm {
+            concat::fragment { "server.xml-${name}":
+               target  => "${confdir}/server.xml",
+               content => "               ${_content} />\n",
+               order   => "50_${service}_50_${host}_22_${realm}_50",
+            }
+         }
+         else {
+            concat::fragment { "server.xml-${name}":
+               target  => "${confdir}/server.xml",
+               content => "            ${_content} />\n",
+               order   => "50_${service}_50_${host}_20",
+            }
          }
       }
    } else {
       if $realms != {} {
          concat::fragment { "server.xml-${name}-header":
-            target  => "${basedir}/conf/server.xml",
+            target  => "${confdir}/server.xml",
             content => "         ${_content}>\n",
-            order   => "50_${service}_40",
+            order   => "50_${service}_42_${class_name}_00",
          }
          concat::fragment { "server.xml-${name}-footer":
-            target  => "${basedir}/conf/server.xml",
+            target  => "${confdir}/server.xml",
             content => "         </Realm>\n",
-            order   => "50_${service}_41",
+            order   => "50_${service}_42_${class_name}_99",
          }
          create_resources(tomcat::realm,
             hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:*:${class_name}:"), values($realms))))
       } else {
-         concat::fragment { "server.xml-${name}":
-            target  => "${basedir}/conf/server.xml",
-            content => "         ${_content} />\n",
-            order   => '43',
+         if $realm {
+            concat::fragment { "server.xml-${name}":
+               target  => "${confdir}/server.xml",
+               content => "            ${_content} />\n",
+               order   => "50_${service}_42_${realm}_50",
+            }
+         }
+         else {
+            concat::fragment { "server.xml-${name}":
+               target  => "${confdir}/server.xml",
+               content => "         ${_content} />\n",
+               order   => "50_${service}_40",
+            }
          }
       }
    }

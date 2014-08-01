@@ -14,16 +14,27 @@ define tomcat::service(
    validate_string($server)
    validate_string($service)
 
-   $basedir = "${tomcat::basedir}/${server}"
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    concat::fragment { "server.xml-${name}-header":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n   <Service name='${service}'>\n\n",
       order   => "50_${service}_00",
    }
 
    concat::fragment { "server.xml-${name}-footer":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n   </Service>\n",
       order   => "50_${service}_99",
    }

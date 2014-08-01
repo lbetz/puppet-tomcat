@@ -51,23 +51,34 @@ define tomcat::engine(
    validate_hash($hosts)
    validate_hash($realms)
 
-   $basedir = "${tomcat::basedir}/${server}"
    $owner   = $params::owner
    $group   = $params::group
+   $version = $tomcat::version
+
+   # standalone
+   if $tomcat::config {
+      $basedir = $params::conf[$version]['catalina_home']
+      $confdir = $params::conf[$version]['confdir']
+   }
+   # multi instance
+   else {
+      $basedir = "${tomcat::basedir}/${title}"
+      $confdir  = "${basedir}/conf"
+   }
 
    concat::fragment { "server.xml-${name}-header":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n      <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
       order   => "50_${service}_20",
    }
 
    concat::fragment { "server.xml-${name}-footer":
-      target  => "${basedir}/conf/server.xml",
+      target  => "${confdir}/server.xml",
       content => "\n      </Engine>\n",
       order   => "50_${service}_89",
    }
 
-   file { "${basedir}/conf/${engine}":
+   file { "${confdir}/${engine}":
       ensure => directory,
       owner  => $owner,
       group  => $group,

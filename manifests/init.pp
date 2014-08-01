@@ -98,7 +98,19 @@ class tomcat(
    }
    else {
       # for standalone name define resource tomcat::server to 'tomcat6' or 'tomcat'
-      tomcat::server { $service: }
+      if $config['listener'] {}
+
+      tomcat::server { $service:
+         ensure    => running,
+         enable    => true,
+         port      => $config['port'],
+         java_home => $config['java_home'],
+         services  => $config['services'],
+         listeners => $config['listeners'],
+         resources => $config['resources'],
+         setenv    => [],
+         managed   => true,
+      }
    }
 
 }
