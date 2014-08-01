@@ -21,6 +21,10 @@ define tomcat::server::service(
    $enable = true,
 ) {
 
+   if $module_name != $caller_module_name {
+      fail("tomcat::server::service is a privat define resource of module tomcat, you're not able to use.")
+   }
+
    # standalone
    if $tomcat::config {
       $service = $tomcat::service

@@ -25,6 +25,10 @@ define tomcat::server::initialize(
    $setenv,
 ) {
 
+   if $module_name != $caller_module_name {
+      fail("tomcat::server::initialize is a privat define resource of module tomcat, you're not able to use.")
+   }
+
    # used by init script
    $version         = $tomcat::version
    $catalina_home   = $params::conf[$version]['catalina_home']
