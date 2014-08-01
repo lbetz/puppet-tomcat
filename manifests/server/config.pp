@@ -30,7 +30,7 @@ define tomcat::server::config(
 ) {
 
    if $module_name != $caller_module_name {
-      fail("tomcat::server::config is a privat define resource of module tomcat, you're not able to use.")
+      fail("tomcat::server::config is a private define resource of module tomcat, you're not able to use.")
    }
 
    $server  = $title

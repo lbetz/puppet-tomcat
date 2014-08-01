@@ -1,5 +1,9 @@
 class tomcat::params {
 
+   if $module_name != $caller_module_name {
+      fail("tomcat::params is a private class of module tomcat, you're not able to use.")
+   }
+
    $version = '6'
 
    case $::osfamily {

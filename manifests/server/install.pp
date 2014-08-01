@@ -7,7 +7,7 @@
 define tomcat::server::install {
 
    if $module_name != $caller_module_name {
-      fail("tomcat::server::install is a privat define resource of module tomcat, you're not able to use.")
+      fail("tomcat::server::install is a private define resource of module tomcat, you're not able to use.")
    }
 
    $owner   = $params::owner

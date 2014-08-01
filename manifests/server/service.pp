@@ -22,7 +22,7 @@ define tomcat::server::service(
 ) {
 
    if $module_name != $caller_module_name {
-      fail("tomcat::server::service is a privat define resource of module tomcat, you're not able to use.")
+      fail("tomcat::server::service is a private define resource of module tomcat, you're not able to use.")
    }
 
    # standalone
