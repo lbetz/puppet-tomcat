@@ -40,7 +40,8 @@ class { 'tomcat':
 
 All tomcat packages will be installed and tomcat is configured as standalone server.
 The OS specific file and directory structure is used, i.e. /etc/tomcat6/server.xml.
-If config is an empty hash, a default configuration is installed.
+Hash config has to contain the hole configuration of the standalone server. No default
+configuration is served by this version.
 ```puppet
 class { 'tomcat':
    config  => {},
@@ -49,13 +50,19 @@ class { 'tomcat':
 
 Setup a new instance of tomcat, using a Java Runtime Environment 1.6.0 and management port 8005.
 Base directory for this instance is $basdir/myapp1, $basedir (default /var/www) set in tomcat class. 
+You have to set listeners and services hashes to have a configured an runable server instance. Take
+a look in file manifests/server.pp for examples.
 ````puppet
 tomcat::server { 'myapp1':
    ensure   => 'running',
    enable   => false,
    port     => '8005',
    java_home => '/etc/alternatives/jre_1.6.0',
+   $listeners = {},
+   $port      = '8005',
+   $resources = {},
+   $services  = {},
 }
 ```
 
-For more documentation, please have a look at the inline documentaion of the source code.
+For detail documentation, please have a look at the inline documentaion of the source code.

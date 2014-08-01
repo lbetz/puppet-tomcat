@@ -20,7 +20,7 @@ class tomcat::params {
                          'tempdir'         => '/var/cache/tomcat6/temp',
                          'webappdir'       => '/var/lib/tomcat6/webapps',
                          'workdir'         => '/var/cache/tomcat6/work',
-                         },
+                      },
                       '7' => {
                          'catalina_home'   => '/usr/share/tomcat',
                          'catalina_script' => '/usr/sbin/tomcat',
