@@ -58,10 +58,10 @@ tomcat::server { 'myapp1':
    enable   => false,
    port     => '8005',
    java_home => '/etc/alternatives/jre_1.6.0',
-   $listeners = {},
-   $port      = '8005',
-   $resources = {},
-   $services  = {},
+   listeners => {},
+   port      => '8005',
+   resources => {},
+   services  => {},
 }
 ```
 
