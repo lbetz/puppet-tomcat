@@ -52,8 +52,8 @@ class tomcat(
    validate_re($version, '^[6-7]$')
    validate_absolute_path($basedir)
 
-   $catalina_home   = $params::conf[$version]['catalina_home']
    $packages        = $params::conf[$version]['packages']
+   $catalina_home   = $params::conf[$version]['catalina_home']
    $service         = $params::conf[$version]['service']
    $catalina_script = $params::conf[$version]['catalina_script']
 
@@ -67,7 +67,7 @@ class tomcat(
       group  => 'root',
       mode   => '0755',
       source => 'puppet:///modules/tomcat/catalina.sh',
-   } ->
+   }
 
    file { "${catalina_home}/bin/setclasspath.sh":
       ensure  => file,
@@ -77,7 +77,22 @@ class tomcat(
       source  => 'puppet:///modules/tomcat/setclasspath.sh',
    }
 
-   if ! $config {
+   # for standalone name define resource tomcat::server to 'tomcat6' or 'tomcat'
+   if $config {
+      tomcat::server { $service:
+         ensure    => running,
+         enable    => true,
+         port      => $config['port'],
+         java_home => $config['java_home'],
+         services  => $config['services'],
+         listeners => $config['listeners'],
+         resources => $config['resources'],
+         setenv    => [],
+         managed   => true,
+         require => File[$catalina_script],
+      }
+   }
+   else {
       file { "/etc/init.d/${service}":
          ensure => file,
          mode   => '0644',
@@ -94,22 +109,6 @@ class tomcat(
       service { $service:
          ensure => stopped,
          enable => false,
-      }
-   }
-   else {
-      # for standalone name define resource tomcat::server to 'tomcat6' or 'tomcat'
-      if $config['listener'] {}
-
-      tomcat::server { $service:
-         ensure    => running,
-         enable    => true,
-         port      => $config['port'],
-         java_home => $config['java_home'],
-         services  => $config['services'],
-         listeners => $config['listeners'],
-         resources => $config['resources'],
-         setenv    => [],
-         managed   => true,
       }
    }
 

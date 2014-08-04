@@ -135,6 +135,10 @@ define tomcat::server(
       fail('Your using tomcat as standalone server')
    }
 
+   if ! defined(Class['tomcat']) {
+      fail('You have to define the class tomcat first.')
+   }
+
    validate_re($ensure, '^(present|absent|running|stopped)$',
       "${ensure} is not supported for ensure. Allowed values are 'present', 'absent', 'running' and 'stopped'.")
    validate_bool($enable)
@@ -154,14 +158,11 @@ define tomcat::server(
       $basedir = "${tomcat::basedir}/${title}"
    }
 
-   #require tomcat
-
    if $ensure != 'absent' {
 
       anchor { "tomact::server::${title}::begin":
-         before => Tomcat::Server::Install[$title],
          notify => Tomcat::Server::Service[$title],
-      }
+      } ->
 
       tomcat::server::install { $title: } ->
       tomcat::server::initialize { $title:
