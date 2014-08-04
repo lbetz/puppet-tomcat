@@ -1,7 +1,7 @@
 class { 'tomcat':
    config => {
       port      => '8005',
-      java_home => '/etc/alternatives/jre_1.7.0',
+      java_home => '/usr/lib/jvm/jre',
       services => {
          'Catalina' => {
             'connectors' => {

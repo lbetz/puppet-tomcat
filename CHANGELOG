@@ -1,3 +1,15 @@
+2014-08-04 0.2.1
+
+Summary
+
+Only fixes in this release.
+
+Fixes:
+- dependency cycle in multi instance
+- concat dependency in service, engine, ...
+- change dependency between init script (file permission <-> service stopped)
+  for multi instance 
+
 2014-08-01 0.2.0
 
 Summary

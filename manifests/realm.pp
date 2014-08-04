@@ -87,7 +87,7 @@ define tomcat::realm(
    }
    # multi instance
    else {
-      $basedir = "${tomcat::basedir}/${title}"
+      $basedir = "${tomcat::basedir}/${server}"
       $confdir  = "${basedir}/conf"
    }
 

@@ -88,7 +88,7 @@ tomcat::server { 'myapp1':
 } ->
 
 tomcat::server { 'myapp2':
-   ensure   => running,
+   ensure   => absent,
    enable   => false,
    port     => '8006',
    java_home => '/usr/lib/jvm/jre',

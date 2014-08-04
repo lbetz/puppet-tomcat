@@ -1,7 +1,7 @@
 {
   "author": "Lennart Betz",
   "name": "puppet-tomcat",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "source": "git://github.com/lbetz/puppet-tomcat",
   "license": "GPL v2",
   "project_page": "http://github.com/lbetz/puppet-tomcat",

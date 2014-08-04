@@ -75,6 +75,7 @@ class tomcat(
       group   => $group,
       mode    => '0664',
       source  => 'puppet:///modules/tomcat/setclasspath.sh',
+      require => Package[$packages],
    }
 
    # for standalone name define resource tomcat::server to 'tomcat6' or 'tomcat'
@@ -93,10 +94,15 @@ class tomcat(
       }
    }
    else {
+      service { $service:
+         ensure => stopped,
+         enable => false,
+         require => Package[$packages],
+      } ->
+
       file { "/etc/init.d/${service}":
          ensure => file,
          mode   => '0644',
-         require => File["${catalina_home}/bin/setclasspath.sh"],
       } ->
 
       file { $basedir:
@@ -104,11 +110,6 @@ class tomcat(
          owner  => 'root',
          group  => 'root',
          mode   => '0755',
-      } ->
-      
-      service { $service:
-         ensure => stopped,
-         enable => false,
       }
    }
 
