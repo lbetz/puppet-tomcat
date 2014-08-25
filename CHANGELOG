@@ -5,6 +5,15 @@ Summary
 Only fixes in this release.
 
 Fixes:
+- added standalone configuration for tomcat 7
+
+2014-08-04 0.2.1
+
+Summary
+
+Only fixes in this release.
+
+Fixes:
 - dependency cycle in multi instance
 - concat dependency in service, engine, ...
 - change dependency between init script (file permission <-> service stopped)

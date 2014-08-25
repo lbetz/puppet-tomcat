@@ -26,6 +26,13 @@ class tomcat::params {
                          'catalina_script' => '/usr/sbin/tomcat',
                          'packages'        => 'tomcat',
                          'service'         => 'tomcat',
+         		 'bindir'          => '/usr/share/tomcat/bin',
+                         'confdir'         => '/etc/tomcat',
+                         'libdir'          => '/usr/share/java/tomcat',
+                         'logdir'          => '/var/log/tomcat',
+                         'tempdir'         => '/var/cache/tomcat/temp',
+                         'webappdir'       => '/var/lib/tomcat/webapps',
+                         'workdir'         => '/var/cache/tomcat/work',
                       },
          }
 
