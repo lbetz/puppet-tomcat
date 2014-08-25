@@ -1,5 +1,5 @@
 name    'lbetz-tomcat'
-version '0.2.1'
+version '0.2.2'
 source 'https://github.com/lbetz/netways-tomcat'
 author 'Lennart Betz'
 license 'GPL v2'
