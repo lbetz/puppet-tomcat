@@ -35,7 +35,7 @@
 #
 define tomcat::engine(
    $default_host = 'localhost',
-   $hosts        = {},
+   $hosts        = undef,
    $realms       = {},
    $server      = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
       $name   => undef,
@@ -48,13 +48,18 @@ define tomcat::engine(
       default => regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1'), },
 ) {
 
-   validate_hash($hosts)
    validate_hash($realms)
 
    $owner   = $params::owner
    $group   = $params::group
    $version = $tomcat::version
-
+   if $hosts {
+      validate_hash($hosts)
+      $_hosts = $hosts }
+   else {
+      $_hosts = $params::defaults['hosts']
+   }
+   
    # standalone
    if $tomcat::config {
       $basedir = $params::conf[$version]['catalina_home']
@@ -86,7 +91,7 @@ define tomcat::engine(
    }
 
    create_resources(tomcat::host,
-      hash(zip(prefix(keys($hosts), "${server}:${service}:${engine}:"), values($hosts))))
+      hash(zip(prefix(keys($_hosts), "${server}:${service}:${engine}:"), values($_hosts))))
 
    create_resources(tomcat::realm,
       hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:"), values($realms))))

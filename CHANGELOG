@@ -6,6 +6,8 @@ Added feature default parameters
 
 Features:
 - default connector http-8080 
+- default listeners
+- set default hosts to localhost
 
 2014-08-04 0.2.1
 

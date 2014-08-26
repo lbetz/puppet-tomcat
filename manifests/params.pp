@@ -4,18 +4,36 @@ class tomcat::params {
 
    $defaults = {
       'connectors' => {
-          'http-8080' => {
-             port => '8080',
-             protocol => 'HTTP/1.1',
-             redirect_port => '8443',
-          },
+         'http-8080' => {
+            port => '8080',
+            protocol => 'HTTP/1.1',
+            redirect_port => '8443',
+         },
       },
       'listeners' => {
-         'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
-         'org.apache.catalina.core.JasperListener' => {},
-         'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
-         'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
-         #'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+         '6' => {
+            'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
+            'org.apache.catalina.core.JasperListener' => {},
+            'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
+            'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+            'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
+         },
+         '7' => {
+            'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
+            'org.apache.catalina.core.JasperListener' => {},
+            'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
+            'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+            'org.apache.catalina.core.ThreadLocalLeakPreventionListene' => {},
+         },
+      },
+      'hosts' => {
+         'localhost' => {
+            'app_base'            => 'webapps',
+            'unpack_wars'         => true,
+            'auto_deploy'         => true,
+            'xml_validation'      => false,
+            'xml_namespace_aware' => false,
+         },
       },
    }
 
