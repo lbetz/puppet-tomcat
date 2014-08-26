@@ -2,6 +2,23 @@ class tomcat::params {
 
    $version = '6'
 
+   $defaults = {
+      'connectors' => {
+          'http-8080' => {
+             port => '8080',
+             protocol => 'HTTP/1.1',
+             redirect_port => '8443',
+          },
+      },
+      'listeners' => {
+         'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
+         'org.apache.catalina.core.JasperListener' => {},
+         'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
+         'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
+         #'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+      },
+   }
+
    case $::osfamily {
 
       'redhat': {

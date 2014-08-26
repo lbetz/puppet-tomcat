@@ -1,5 +1,5 @@
 define tomcat::service(
-   $connectors,
+   $connectors = undef,
    $engine     = {},
    $server     = regsubst($name, '^([^:]+):[^:]+$', '\1') ? {
       $name   => undef,
@@ -9,12 +9,17 @@ define tomcat::service(
       default => regsubst($name, '^[^:]+:([^:]+)$', '\1'), },
 ) {
 
-   validate_hash($connectors)
    validate_hash($engine)
    validate_string($server)
    validate_string($service)
 
    $version = $tomcat::version
+   if $connectors {
+      validate_hash($connectors)
+      $_connectors = $connectors }
+   else {
+      $_connectors = $params::defaults['connectors']
+   }
 
    # standalone
    if $tomcat::config {
@@ -40,7 +45,7 @@ define tomcat::service(
    }
 
    create_resources(tomcat::connector,
-      hash(zip(prefix(keys($connectors), "${server}:${service}:"), values($connectors))))
+      hash(zip(prefix(keys($_connectors), "${server}:${service}:"), values($_connectors))))
 
    create_resources(tomcat::engine,
       hash(zip(prefix(keys($engine), "${server}:${service}:"), values($engine))))
