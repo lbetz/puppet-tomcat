@@ -1,6 +1,6 @@
 name    'lbetz-tomcat'
-version '0.2.2'
-source 'https://github.com/lbetz/netways-tomcat'
+version '0.2.3'
+source 'https://github.com/lbetz/puppet-tomcat'
 author 'Lennart Betz'
 license 'GPL v2'
 summary 'Setup and configure Apache Tomcat on RedHat/CentOS'
