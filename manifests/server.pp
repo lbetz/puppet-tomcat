@@ -124,7 +124,7 @@ define tomcat::server(
    $enable    = true,
    $listeners = undef,
    $port      = '8005',
-   $resources = {},
+   $resources = undef,
    $services  = undef,
    $java_home = '/usr/lib/jvm/jre',
    $managed   = true,
@@ -142,7 +142,6 @@ define tomcat::server(
    validate_re($ensure, '^(present|absent|running|stopped)$',
       "${ensure} is not supported for ensure. Allowed values are 'present', 'absent', 'running' and 'stopped'.")
    validate_bool($enable)
-   validate_hash($resources)
    validate_array($setenv)
 
    $version = $tomcat::version
@@ -157,6 +156,12 @@ define tomcat::server(
       $_services = $services }
    else {
       $_services = $params::defaults['services']
+   }
+   if $resources {
+      validate_hash($resources)
+      $_resources = $resources }
+   else {
+      $_resources = $params::defaults['resources']
    }
 
    # standalone
@@ -189,7 +194,7 @@ define tomcat::server(
          tomcat::server::config { $title:
             port      => $port,
             services  => $_services,
-            resources => $resources,
+            resources => $_resources,
             listeners => $_listeners,
             require   => Tomcat::Server::Initialize[$title],
             notify    => Tomcat::Server::Service[$title],

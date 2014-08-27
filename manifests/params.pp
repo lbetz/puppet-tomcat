@@ -49,6 +49,17 @@ class tomcat::params {
       services => {
          'Catalina' => {},
       },
+      resources => {
+         'UserDatabase' => {
+            'auth'        => 'Container',
+            'type'        => 'org.apache.catalina.UserDatabase',
+            'extra_attrs' => {
+               'description' => 'User database that can be updated and saved',
+               'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
+               'pathname'    => 'conf/tomcat-users.xml',
+            },
+         },
+      },
    }
 
    case $::osfamily {

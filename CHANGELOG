@@ -10,6 +10,7 @@ Features:
 - set default hosts to localhost
 - default engine 'Catalina'
 - default service 'Catalina'
+- default resources
 
 2014-08-04 0.2.1
 
