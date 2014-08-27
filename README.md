@@ -64,8 +64,6 @@ class { 'tomcat':
 
 Setup a new instance of tomcat, using a Java Runtime Environment 1.6.0 and management port 8005.
 Base directory for this instance is $basdir/myapp1, $basedir (default /var/www) set in tomcat class. 
-You have to set listeners and services hashes to have a configured an runable server instance. Take
-a look in file manifests/server.pp for examples.
 ````puppet
 tomcat::server { 'myapp1':
    ensure   => 'running',
