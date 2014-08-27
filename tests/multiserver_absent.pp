@@ -11,6 +11,7 @@
 #
 class { 'tomcat':
    version => '6',
+   config  => 'false',
 } ->
 
 tomcat::server { 'myapp1':
