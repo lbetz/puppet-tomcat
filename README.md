@@ -22,9 +22,32 @@ EPEL testing tomcat (7) packages.
 
 ## Usage ##
 
-To install the base OS tomcat packages, defaults are set in params.pp class.
+All tomcat packages will be installed and tomcat is configured as standalone server.
+The OS specific file and directory structure is used, i.e. /etc/tomcat6/server.xml.
+Hash config could contain the hole configuration or just a part of it. For defaults
+take a look to manifests/params.pp, defaults hash.
 ```puppet
 class { 'tomcat': }
+```
+
+To install tomcat 7 standalone with an AJP connector instead of HTTP use the following
+yaml file in your hiera datastore.
+```yaml
+tomcat::version: '7'
+tomcat::config:
+  services:
+    Catalina:
+      connectors:
+        ajp-8009:
+          port: '8009'
+          protocol: 'AJP/1.3'
+```
+
+For using tomcat as multi instance server, defaults are set in params.pp class.
+```puppet
+class { 'tomcat':
+   config  => false,
+}
 ```
 
 Installs base OS tomcat version 6 packages in specified version 6.0.24-72.el6_5.
@@ -35,16 +58,7 @@ class { 'tomcat':
    version => '6',
    release => '6.0.24-72.el6_5',
    basedir => '/var/tomcat',
-}
-```
-
-All tomcat packages will be installed and tomcat is configured as standalone server.
-The OS specific file and directory structure is used, i.e. /etc/tomcat6/server.xml.
-Hash config has to contain the hole configuration of the standalone server. No default
-configuration is served by this version.
-```puppet
-class { 'tomcat':
-   config  => {},
+   config  => false,
 }
 ```
 
@@ -58,10 +72,6 @@ tomcat::server { 'myapp1':
    enable   => false,
    port     => '8005',
    java_home => '/etc/alternatives/jre_1.6.0',
-   listeners => {},
-   port      => '8005',
-   resources => {},
-   services  => {},
 }
 ```
 
