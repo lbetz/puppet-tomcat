@@ -46,6 +46,9 @@ class tomcat::params {
             },
          },
       },
+      services => {
+         'Catalina' => {},
+      },
    }
 
    case $::osfamily {
