@@ -4,30 +4,6 @@ class { 'tomcat':
       java_home => '/usr/lib/jvm/jre',
       services => {
          'Catalina' => {
-            'engine' => {
-               'Catalina' => {
-                  'realms' => {
-                     'org.apache.catalina.realm.LockOutRealm' => {
-                        'realms' => {
-                           'org.apache.catalina.realm.UserDatabaseRealm' => {
-                              'attrs' => {
-                                 'resource_name' => 'UserDatabase',
-                              },
-                           },
-                        },
-                     },
-                     'org.apache.catalina.realm.CombinedRealm' => {
-                        'realms' => {
-                           'org.apache.catalina.realm.UserDatabaseRealm' => {
-                              'attrs' => {
-                                 'resource_name' => 'UserDatabase',
-                              },
-                           },
-                        },
-                     },
-                  },
-               },
-            }, # engine
          },
       }, # services
       resources => {

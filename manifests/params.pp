@@ -35,6 +35,17 @@ class tomcat::params {
             'xml_namespace_aware' => false,
          },
       },
+      'engine' => {
+         'Catalina' => {
+            'realms' => {
+               'org.apache.catalina.realm.UserDatabaseRealm' => {
+                  'attrs' => {
+                     'resource_name' => 'UserDatabase',
+                  },
+               },
+            },
+         },
+      },
    }
 
    case $::osfamily {
