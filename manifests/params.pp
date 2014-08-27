@@ -23,7 +23,7 @@ class tomcat::params {
             'org.apache.catalina.core.JasperListener' => {},
             'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
             'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
-            'org.apache.catalina.core.ThreadLocalLeakPreventionListene' => {},
+            'org.apache.catalina.core.ThreadLocalLeakPreventionListener' => {},
          },
       },
       'hosts' => {

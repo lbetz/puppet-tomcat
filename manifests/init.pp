@@ -46,7 +46,7 @@ class tomcat(
    $version    = $params::version,
    $release    = 'installed',
    $basedir    = $params::basedir,
-   $config     = false,
+   $config     = {},
 ) inherits tomcat::params {
 
    validate_re($version, '^[6-7]$')

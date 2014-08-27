@@ -1,8 +1,12 @@
-2014-08-27 0.2.2
+2014-08-27 0.2.3
 
 Summary
 
 Added feature default parameters
+
+Changes:
+- set tomcat::config parameter default to {} (before false),
+  so you will get now a standalone server with a default configuration.
 
 Features:
 - default connector http-8080 
@@ -12,7 +16,7 @@ Features:
 - default service 'Catalina'
 - default resources
 
-2014-08-04 0.2.1
+2014-08-25 0.2.2
 
 Summary
 
