@@ -56,10 +56,17 @@ class tomcat(
    $catalina_home   = $params::conf[$version]['catalina_home']
    $service         = $params::conf[$version]['service']
    $catalina_script = $params::conf[$version]['catalina_script']
+   $logdir          = $params::conf[$version]['logdir']
+   $tempdir         = $params::conf[$version]['tempdir']
+   $workdir         = $params::conf[$version]['workdir']
+   $webappdir       = $params::conf[$version]['webappdir']
+   $bindir          = $params::conf[$version]['bindir']
+   $confdir         = $params::conf[$version]['confdir']
+   $libdir          = $params::conf[$version]['libdir']
 
    package { $packages:
       ensure => $release,
-   } ->
+   }
 
    file { $catalina_script:
       ensure => file,
@@ -67,6 +74,7 @@ class tomcat(
       group  => 'root',
       mode   => '0755',
       source => 'puppet:///modules/tomcat/catalina.sh',
+      require => Package[$packages],
    }
 
    file { "${catalina_home}/bin/setclasspath.sh":
@@ -75,6 +83,36 @@ class tomcat(
       group   => $group,
       mode    => '0664',
       source  => 'puppet:///modules/tomcat/setclasspath.sh',
+      require => Package[$packages],
+   }
+
+   file { "${catalina_home}/conf":
+      ensure => link,
+      target => $confdir,
+      require => Package[$packages],
+   }
+
+   file { "${catalina_home}/logs":
+      ensure => link,
+      target => $logdir,
+      require => Package[$packages],
+   }
+
+   file { "${catalina_home}/temp":
+      ensure => link,
+      target => $tempdir,
+      require => Package[$packages],
+   }
+
+   file { "${catalina_home}/work":
+      ensure => link,
+      target => $workdir,
+      require => Package[$packages],
+   }
+
+   file { "${catalina_home}/webapps":
+      ensure => link,
+      target => $webappdir,
       require => Package[$packages],
    }
 

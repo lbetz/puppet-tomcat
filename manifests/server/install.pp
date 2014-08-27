@@ -16,14 +16,9 @@ define tomcat::server::install {
 
    # standalone
    if $tomcat::config {
-      $basedir   = $params::conf[$version]['catalina_home']
-      $logdir    = $params::conf[$version]['logdir']
       $tempdir   = $params::conf[$version]['tempdir']
       $workdir   = $params::conf[$version]['workdir']
       $webappdir = $params::conf[$version]['webappdir']
-      $bindir    = $params::conf[$version]['bindir']
-      $confdir   = $params::conf[$version]['confdir']
-      $libdir    = $params::conf[$version]['libdir']
    }
    # multi instance
    else {
@@ -35,20 +30,41 @@ define tomcat::server::install {
       $bindir    = "${basedir}/bin"
       $confdir   = "${basedir}/conf"
       $libdir    = "${basedir}/lib"
-   }
 
-   file { $basedir:
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-   }
+      file { $basedir:
+         ensure => directory,
+         owner  => 'root',
+         group  => 'root',
+         mode   => '0755',
+      }
    
-   file { $logdir:
-      ensure => directory,
-      owner  => $owner,
-      group  => 'root',
-      mode   => '0755',
+      file { $logdir:
+         ensure => directory,
+         owner  => $owner,
+         group  => 'root',
+         mode   => '0755',
+      }
+
+      file { $bindir:
+         ensure => directory,
+         owner  => 'root',
+         group  => 'root',
+         mode   => '0755',
+      }
+
+      file { $confdir:
+         ensure => directory,
+         owner  => 'root',
+         group  => $group,
+         mode   => '2775',
+      }
+
+      file { $libdir:
+         ensure => directory,
+         owner  => 'root',
+         group  => 'root',
+         mode   => '0755',
+      }
    }
 
    file { [$tempdir, $workdir, $webappdir]:
@@ -56,27 +72,6 @@ define tomcat::server::install {
       owner  => 'root',
       group  => $group,
       mode   => '0775',
-   }
-   
-   file { $bindir:
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-   }
-
-   file { $confdir:
-      ensure => directory,
-      owner  => 'root',
-      group  => $group,
-      mode   => '2775',
-   }
-
-   file { $libdir:
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
    }
 
 }

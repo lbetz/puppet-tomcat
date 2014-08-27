@@ -126,7 +126,7 @@ define tomcat::server(
    $port      = '8005',
    $resources = undef,
    $services  = undef,
-   $java_home = '/usr/lib/jvm/jre',
+   $java_home = undef,
    $managed   = true,
    $setenv    = [],
 ) {
@@ -145,6 +145,14 @@ define tomcat::server(
    validate_array($setenv)
 
    $version = $tomcat::version
+
+   # set prameter defaults
+   if $java_home {
+      validate_absolute_path($java_home)
+      $_java_home = $java_home }
+   else {
+      $_java_home = $params::java_home
+   }
    if $listeners {
       validate_hash($listeners)
       $_listeners = $listeners }
@@ -182,7 +190,7 @@ define tomcat::server(
       tomcat::server::install { $title: } ->
       tomcat::server::initialize { $title:
          ensure    => present,
-         java_home => $java_home,
+         java_home => $_java_home,
          setenv    => $setenv,
       } ~>
       tomcat::server::service { $title:
@@ -215,7 +223,7 @@ define tomcat::server(
       } ->
       tomcat::server::initialize { $title:
          ensure => absent,
-         java_home => $java_home,
+         java_home => $_java_home,
          setenv    => $setenv,
       } ->
       file { $basedir:
