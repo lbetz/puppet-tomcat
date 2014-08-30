@@ -8,6 +8,7 @@ Changes:
 - create bin, log, etc, lib and base only for instances
 - links in $CATALINA_HOME to etc, log, temp, work, webapss, ...
   under puppet control
+- user, group vars moved to params::conf hash
 
 2014-08-27 0.2.3
 

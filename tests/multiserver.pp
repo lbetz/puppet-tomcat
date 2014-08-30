@@ -18,7 +18,6 @@ tomcat::server { 'myapp1':
    ensure   => 'running',
    enable   => false,
    port     => '8005',
-   java_home => '/usr/lib/jvm/jre',
    services => { 
       'Catalina' => { 
          'connectors' => {
@@ -29,70 +28,14 @@ tomcat::server { 'myapp1':
                port => '8009', protocol => 'AJP/1.3', redirect_port => '8443',
             }
          },
-         'engine' => { 
-            'Catalina' => {
-               'default_host' => 'localhost',
-               'realms'       => { 
-                  'org.apache.catalina.realm.LockOutRealm' => {
-                     'realms' => {
-                         'org.apache.catalina.realm.UserDatabaseRealm' => {
-                            'attrs' => {
-                               'resource_name' => 'UserDatabase', 
-                            },
-                         },
-                     },
-                  },
-               },        
-               'hosts'        => {
-                  'localhost' => {
-                     'app_base'            => 'webapps',
-                     'unpack_wars'         => true,
-                     'auto_deploy'         => true,
-                     'xml_validation'      => false,
-                     'xml_namespace_aware' => false,
-                     'realms'              => {
-                        'org.apache.catalina.realm.LockOutRealm' => {
-                           'realms' => {
-                              'org.apache.catalina.realm.UserDatabaseRealm' => {
-                                 'attrs' => {
-                                    'resource_name' => 'UserDatabase', 
-                                 },
-                              },
-                           },
-                        },
-                     },        
-                  },
-               },
-            },
-         },
       },
    },
-   resources => {
-      'UserDatabase' => {
-         'auth'        => 'Container',
-         'type'        => 'org.apache.catalina.UserDatabase',
-         'extra_attrs' => {
-            'description' => 'User database that can be updated and saved',
-            'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
-            'pathname'    => 'conf/tomcat-users.xml',
-         },
-      },
-   },
-   listeners => {
-      'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
-      'org.apache.catalina.core.JasperListener' => {},
-      'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
-#      'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
-      'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
-   },
-
 } ->
 
 tomcat::server { 'myapp2':
    ensure   => running,
    enable   => false,
    port     => '8006',
-   java_home => '/usr/lib/jvm/jre',
    services => { 
       'Catalina' => { 
          'connectors' => {
@@ -114,6 +57,13 @@ tomcat::server { 'myapp2':
                   },
                },        
                'hosts'        => {
+                  'localhost1' => {
+                     'app_base'            => 'webapps',
+                     'unpack_wars'         => true,
+                     'auto_deploy'         => true,
+                     'xml_validation'      => false,
+                     'xml_namespace_aware' => false,
+                  },
                   'localhost2' => {
                      'app_base'            => 'webapps',
                      'unpack_wars'         => true,
@@ -125,23 +75,5 @@ tomcat::server { 'myapp2':
             },
          },
       },
-   },
-   resources => {
-      'UserDatabase' => {
-         'auth'        => 'Container',
-         'type'        => 'org.apache.catalina.UserDatabase',
-         'extra_attrs' => {
-            'description' => 'User database that can be updated and saved',
-            'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
-            'pathname'    => 'conf/tomcat-users.xml',
-         },
-      },
-   },
-   listeners => {
-      'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
-      'org.apache.catalina.core.JasperListener' => {},
-      'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
-#      'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
-      'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
    },
 }
