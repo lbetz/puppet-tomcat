@@ -10,9 +10,9 @@ define tomcat::server::install {
       fail("tomcat::server::install is a private define resource of module tomcat, you're not able to use.")
    }
 
-   $owner   = $params::owner
-   $group   = $params::group
    $version = $tomcat::version
+   $owner   = $params::conf[$version]['owner']
+   $group   = $params::conf[$version]['group']
 
    # standalone
    if $tomcat::config {

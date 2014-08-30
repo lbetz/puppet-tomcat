@@ -63,6 +63,7 @@ class tomcat(
    $bindir          = $params::conf[$version]['bindir']
    $confdir         = $params::conf[$version]['confdir']
    $libdir          = $params::conf[$version]['libdir']
+   $group           = $params::conf[$version]['group']
 
    package { $packages:
       ensure => $release,

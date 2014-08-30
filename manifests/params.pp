@@ -7,9 +7,9 @@ class tomcat::params {
       'redhat': {
          $basedir   = '/var/tomcat'
          $java_home = '/usr/lib/jvm/jre'
-         $owner     = 'tomcat'
-         $group     = 'tomcat'
          $conf      = { '6' => {
+                         'owner'           => 'tomcat',
+                         'group'           => 'tomcat',
                          'catalina_home'   => '/usr/share/tomcat6',
                          'catalina_script' => '/usr/sbin/tomcat6',
                          'packages'        => 'tomcat6',
@@ -23,6 +23,8 @@ class tomcat::params {
                          'workdir'         => '/var/cache/tomcat6/work',
                       },
                       '7' => {
+                         'owner'           => 'tomcat',
+                         'group'           => 'tomcat',
                          'catalina_home'   => '/usr/share/tomcat',
                          'catalina_script' => '/usr/sbin/tomcat',
                          'packages'        => 'tomcat',
@@ -42,9 +44,9 @@ class tomcat::params {
       'debian': {
          $basedir   = '/var/tomcat'
          $java_home = '/usr/lib/jvm/default-java/jre'
-         $owner     = 'tomcat6'
-         $group     = 'tomcat6'
          $conf      = { '6' => {
+                         'owner'           => 'tomcat6',
+                         'group'           => 'tomcat6',
                          'catalina_home'   => '/usr/share/tomcat6',
                          'catalina_script' => '/usr/share/tomcat6/bin/catalina.sh',
                          'packages'        => 'tomcat6',
@@ -58,17 +60,19 @@ class tomcat::params {
                          'workdir'         => '/var/cache/tomcat6/work',
                       },
                       '7' => {
-                         'catalina_home'   => '/usr/share/tomcat',
-                         'catalina_script' => '/usr/sbin/tomcat',
-                         'packages'        => 'tomcat',
-                         'service'         => 'tomcat',
-         		 'bindir'          => '/usr/share/tomcat/bin',
-                         'confdir'         => '/etc/tomcat',
-                         'libdir'          => '/usr/share/java/tomcat',
-                         'logdir'          => '/var/log/tomcat',
-                         'tempdir'         => '/var/cache/tomcat/temp',
-                         'webappdir'       => '/var/lib/tomcat/webapps',
-                         'workdir'         => '/var/cache/tomcat/work',
+                         'owner'           => 'tomcat7',
+                         'group'           => 'tomcat7',
+                         'catalina_home'   => '/usr/share/tomcat7',
+                         'catalina_script' => '/usr/share/tomcat7/bin/catalina.sh',
+                         'packages'        => 'tomcat7',
+                         'service'         => 'tomcat7',
+         		 'bindir'          => '/usr/share/tomcat7/bin',
+                         'confdir'         => '/etc/tomcat7',
+                         'libdir'          => '/usr/share/tomcat7/lib',
+                         'logdir'          => '/var/log/tomcat7',
+                         'tempdir'         => '/var/cache/tomcat7/temp',
+                         'webappdir'       => '/var/lib/tomcat7/webapps',
+                         'workdir'         => '/var/cache/tomcat7/work',
                       },
          }
 

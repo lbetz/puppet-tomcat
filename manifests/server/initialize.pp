@@ -34,8 +34,8 @@ define tomcat::server::initialize(
    $catalina_home   = $params::conf[$version]['catalina_home']
    $catalina_script = $params::conf[$version]['catalina_script']
    $server          = $title
-   $owner           = $params::owner
-   $group           = $params::group
+   $owner           = $params::conf[$version]['owner']
+   $group           = $params::conf[$version]['group']
 
    # standalone
    if $tomcat::config {
