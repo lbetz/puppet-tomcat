@@ -8,17 +8,16 @@
 # Document parameters here.
 #
 # [*version*]
-#    of the apache tomcat server, supported versions are 6 and 7 (default)
+#    of the apache tomcat server, supported versions are 6 (default) and 7.
 #
 # [*release*]
 #    valid values are 'latest', 'installed' or exact release version, i.e. '6.0.24-64.el6_5'
 #
 # [*config*]
-#    Hash to configure a standalone server with the distribution layout. Default is 'false',
-#    that means you wanna use more than one instance.
+#    Hash to configure a standalone server with the distribution layout.
 #
 # [*basedir*]
-#    Base directory where to install server instance and their configurations. Directory 
+#    Base directory where to install server instances and their configurations. Directory 
 #    'basedir' has to exist. Ignored for multi instance setup (config => false).
 #
 # === Examples

@@ -9,21 +9,21 @@
 # 'service' of the configuration file 'server.xml' for tomcat server instance 'server'.
 #
 # [*server*]
-#    Name of tomcat server instance to add the connector.
+#    Name of tomcat server instance to add the connector,
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
 #
 # [*service*]
-#    Name of tomcat engine to add the service 'service'.
+#    Name of tomcat engine to add the service 'service',
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
 #
 # [*engine*]
-#    Name of the engine.
+#    Name of the engine,
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
 #
 # [*host*]
 #
 # [*realm*]
-#    Name of the engine.
+#    Name of the realm,
 #    automaticly taken from 'title' then using 'title' like 'server:service:engine:host:realm:class_name' otherwise undef
 #
 # [*class_name*]

@@ -9,7 +9,7 @@
 # file server.xml for tomcat server 'server'. 
 #
 # [*server*]
-#    Name of tomcat server instance to add the connector.
+#    Name of tomcat server instance to add the listener,
 #    automaticly taken from 'title' then using 'title' like 'server:class_name' otherwise undef
 #
 # [*class_name*]

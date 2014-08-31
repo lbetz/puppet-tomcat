@@ -28,7 +28,7 @@
 #   java_home directory where to find the java binary
 #
 # [*managed*]
-#   Enables (default) the configuration of server.xml by this module. Disable means, that the end user
+#   Enables (default) the configuration of server.xml by this module. Disable means, that you
 #   have to manage the configuration outside and start/restart the service.
 #
 # [*setenv*]
