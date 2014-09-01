@@ -162,13 +162,44 @@ Valid values are present or running (present), stopped.
 Enable (true, default) or disable (false) the service to start at boot.
 
 #####`listeners`
-Hash of listeners in the global server section (server.xml).
+Hash of listeners in the global server section (server.xml). Default, for Tomcat 6 
+```puppet
+'listeners' => {
+  'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
+  'org.apache.catalina.core.JasperListener' => {},
+  'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
+  'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+  'org.apache.catalina.mbeans.ServerLifecycleListener' => {},
+},
+```
+rather for Tomcat 7
+```puppet
+'listeners' => {
+  'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
+  'org.apache.catalina.core.JasperListener' => {},
+  'org.apache.catalina.core.JreMemoryLeakPreventionListener' => {},
+  'org.apache.catalina.mbeans.GlobalResourcesLifecycleListener' => {},
+  'org.apache.catalina.core.ThreadLocalLeakPreventionListener' => {},
+},
+```
 
 #####`port`
 Management port (default 8005) on localhost for this instance.
 
 #####`resources`
-Hash of global resources in the server section (server.xml).
+Hash of global resources in the server section (server.xml), default sets to:
+```puppet
+resources => {
+  'UserDatabase' => {
+    'auth'        => 'Container',
+    'type'        => 'org.apache.catalina.UserDatabase',
+    'extra_attrs' => {
+    'description' => 'User database that can be updated and saved',
+    'factory'     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
+    'pathname'    => 'conf/tomcat-users.xml',
+  },
+},
+```
 
 #####`services`
 Hash of services and their attributes.
@@ -177,13 +208,54 @@ Hash of services and their attributes.
 Directory where to find the java binary in subdirectory bin.
 
 #####`managed`
-Enables (default) the configuration of server.xml by this module. Disable means, that you
-have to manage the configuration outside and start/restart the service.
+Enables (default) the configuration of server.xml by this module. Disable means, that
+you have to manage the configuration outside and start/restart the service.
+```puppet
+class { 'tomcat':
+   version => '6',
+   config  => false,
+} ->
+
+tomcat::server { 'myapp1':
+   managed => false,
+}
+
+file { '/var/tomcat/myapp1/conf/server.xml':
+   ensure => file,
+   owner  => 'root',
+   group  => 'root',
+   mode   => '0644',
+   source => 'puppet:///modules/tomcat/example-server.xml',
+   notify => Tomcat::Server::Service['myapp1'],
+}
+```
+There's a bug in the use of anchor, so Notifying Tomcat::Server does not work, yet. 
 
 #####`setenv`
-Handles environment variables in 'bin/setenv-local.sh'.
+Handles environment variables in 'bin/setenv.sh'.
+```puppet
+setenv => [ 'JAVA_XMX="256m"', 'JAVA_XX_MAXPERMSIZE="256m' ]
+```
+Variables to use:
+* `DSUN_JAVA2D_OPENGL` true|false
+* `DJAVA_AWT_HEADLESS` true|false
+* `JAVA_XMX` 
+* `JAVA_XX_MAXPERMSIZE`
+Use ADD_JAVA_OPTS for all other environment variables.
 
 ####Defined Type: `tomcat::resource`
+
+```puppet
+tomcat::resource { 'myapp1:UserDatabase':
+  auth        => 'Container',
+  type        => 'org.apache.catalina.UserDatabase',
+  extra_attrs => {
+    description => 'User database that can be updated and saved',
+    factory     => 'org.apache.catalina.users.MemoryUserDatabaseFactory',
+    pathname    => 'conf/tomcat-users.xml',
+  },
+}
+```
 
 **Parameters within `tomcat::resource`:**
 
@@ -206,6 +278,12 @@ Hash of extra attributes (key => value) for this resource.
 
 ####Defined Type: `tomcat::listener`
 
+```puppet
+tomcat::listener { 'myapp1:org.apache.catalina.core.AprLifecycleListener':
+  ssl_engine => 'On',
+}
+```
+
 **Parameters within `tomcat::listener`:**
 
 #####`server`
@@ -221,6 +299,13 @@ Specify the ssl_engine, default 'undef' (disabled).
 
 ####Defined Type: `tomcat::service`
 
+```puppet
+tomcat::service { 'myapp1:Catalina':
+  connetcors => {},
+  engine     => {},
+}
+```
+
 **Parameters within `tomcat::service`:**
 
 #####`server`
@@ -232,12 +317,28 @@ Service with name 'service',
 automaticly taken from 'title' then using 'title' like 'server:service' otherwise undef.
 
 #####`connectors`
-Hash of connectors and their attributes.
+Hash of connectors and their attributes. If sets and non equal to empty hash {}, the default is used:
+```puppet
+connectors => {
+  'http-8080' => {
+    port          => '8080',
+    protocol      => 'HTTP/1.1',
+    redirect_port => '8443',
+}
+```
 
 #####`engine`
 Hash of the engine and their attributes.
 
 ####Defined Type: `tomcat::connector`
+
+```puppet
+tomcat::connector { 'myapp1:Catalina:ajp-8009':
+  port          => '8009',
+  protocol      => 'AJP/1.3',
+  redirect_port => '8443',
+}
+```
 
 **Parameters within `tomcat::connector`:**
 
@@ -266,13 +367,27 @@ Address to bind, default is false that means bind to all interfaces.
 Supported protocols are HTTP/1.1 (default) and AJP/1.3.
 
 For these parameters, take a look at the Apache Tomcat documentation:
-*`connection_timeout`
-*`redirect_port`
-*`options`
-*`scheme`
-*`executor`
+* `connection_timeout`
+* `redirect_port`
+* `options`
+* `scheme`
+* `executor`
 
 ####Defined Type: `tomcat::engine`
+
+```puppet
+tomcat::engine { 'myapp1:Catalina:Catalina':
+  default_host => 'localhost'
+  hosts => {},
+  realms => {
+    'org.apache.catalina.realm.UserDatabaseRealm' => {
+      'attrs' => {
+        'resource_name' => 'UserDatabase',
+      },
+    },
+  },
+}
+```
 
 **Parameters within `tomcat::engine`:**
 
@@ -298,6 +413,16 @@ Hash of hosts defined under this engine.
 Hash of realms defined under this engine.
 
 ####Defined Type: `tomcat::realm`
+
+```puppet
+tomcat::realm { 'myapp1:Catalina:Catalina:www.example:':
+}
+```
+
+```puppet
+tomcat::realm { 'myapp1:Catalina:Catalina:*:':
+}
+```
 
 **Parameters within `tomcat::realm`:**
 
@@ -333,6 +458,16 @@ Hash of realms defined under this realm.
 
 ####Defined Type: `tomcat::host`
 
+```puppet
+tomcat::host { 'myapp1:Catalina:Catalina:www.example.com':
+  realms              => {},
+  app_base            => 'webapps',
+  unpack_wars         => true,
+  auto_deploy         => true,
+  xml_validation      => false,
+  xml_namespace_aware => false,
+}
+```
 **Parameters within `tomcat::host`:**
 
 #####`server`
@@ -354,12 +489,9 @@ automaticly taken from 'title' then using 'title' like 'server:service:engine:ho
 #####`realms`
 Hash of realms defined for this host.
 
-#####`contexts`
-Hash of contexts defined for this host.
-
 For these parameters, take a look at the Apache Tomcat documentation:
-*`app_base`
-*`auto_deploy`
-*`unpack_wars`
-*`xml_validation`
-*`xml_namespace_aware`
+* `app_base`
+* `auto_deploy`
+* `unpack_wars`
+* `xml_validation`
+* `xml_namespace_aware`

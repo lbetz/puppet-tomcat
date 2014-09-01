@@ -19,6 +19,7 @@ define tomcat::server::install {
       $tempdir   = $params::conf[$version]['tempdir']
       $workdir   = $params::conf[$version]['workdir']
       $webappdir = $params::conf[$version]['webappdir']
+      $confdir   = $params::conf[$version]['confdir']
    }
    # multi instance
    else {
@@ -52,19 +53,21 @@ define tomcat::server::install {
          mode   => '0755',
       }
 
-      file { $confdir:
-         ensure => directory,
-         owner  => 'root',
-         group  => $group,
-         mode   => '2775',
-      }
-
       file { $libdir:
          ensure => directory,
          owner  => 'root',
          group  => 'root',
          mode   => '0755',
       }
+   }
+
+   # defined here to benefit from implicit dependency
+   # for some config files like context.xml
+   file { $confdir:
+      ensure => directory,
+      owner  => 'root',
+      group  => $group,
+      mode   => '2775',
    }
 
    file { [$tempdir, $workdir, $webappdir]:

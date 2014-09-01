@@ -1,3 +1,31 @@
+# == Define Resource: tomcat::service
+#
+# Full description of define tomcat::service here.
+#
+# === Parameters
+#
+# Using titles like 'server:service' are split off automaticly in parameters 'server' and
+# 'service'. That defines the service 'service' in section server of the configuration
+# file 'server.xml' for tomcat server instance 'server'.
+#
+# [*server*]
+#    Name of tomcat server instance to add the connector,
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine' otherwise undef.
+#
+# [*service*]
+#    Name of tomcat engine to add the service 'service',
+#    automaticly taken from 'title' then using 'title' like 'server:service:engine' otherwise undef.
+#
+# [*connectors*]
+#    Hash of connectors and their attributes. If sets and non equal to empty hash {}, the default is used:
+#
+# [*engine*]
+#    Hash of the engine and their attributes.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::service(
    $connectors = undef,
    $engine     = undef,

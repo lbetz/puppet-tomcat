@@ -63,6 +63,7 @@ class tomcat(
    $confdir         = $params::conf[$version]['confdir']
    $libdir          = $params::conf[$version]['libdir']
    $group           = $params::conf[$version]['group']
+   $managed         = $params::managed
 
    package { $packages:
       ensure => $release,
@@ -127,7 +128,7 @@ class tomcat(
          listeners => $config['listeners'],
          resources => $config['resources'],
          setenv    => [],
-         managed   => true,
+         managed   => $config['managed'],
          require => File[$catalina_script],
       }
    }

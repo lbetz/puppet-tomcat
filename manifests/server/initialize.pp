@@ -13,7 +13,7 @@
 #   java_home directory where to find the java binary
 #
 # [*setenv*]
-#   Handles environment variables in 'bin/setenv-local.sh'.
+#   Handles environment variables in 'bin/setenv.sh'.
 #
 # === Authors
 #

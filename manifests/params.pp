@@ -1,6 +1,7 @@
 class tomcat::params {
 
    $version = '6'
+   $managed = true
 
    case $::osfamily {
 

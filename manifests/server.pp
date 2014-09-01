@@ -28,11 +28,10 @@
 #   java_home directory where to find the java binary
 #
 # [*managed*]
-#   Enables (default) the configuration of server.xml by this module. Disable means, that you
-#   have to manage the configuration outside and start/restart the service.
-#
+#    Enables (default) the configuration of server.xml by this module. Disable means, that
+#    you have to manage the configuration outside and start/restart the service.
 # [*setenv*]
-#   Handles environment variables in 'bin/setenv-local.sh'.
+#   Handles environment variables in 'bin/setenv.sh'.
 #
 # === Examples
 #
@@ -192,10 +191,6 @@ define tomcat::server(
          ensure    => present,
          java_home => $_java_home,
          setenv    => $setenv,
-      } ~>
-      tomcat::server::service { $title:
-         ensure => $ensure,
-         enable => $enable,
       }
 
       if $managed {
@@ -209,9 +204,13 @@ define tomcat::server(
          }
       }
 
-      anchor { "tomact::server::${title}::end":
-         require => Tomcat::Server::Service[$title],
-      }
+      tomcat::server::service { $title:
+         ensure => $ensure,
+         enable => $enable,
+         subscribe => Tomcat::Server::Initialize[$title],
+      } ->
+
+      anchor { "tomact::server::${title}::end": }
 
    }
    else {
