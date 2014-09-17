@@ -22,9 +22,9 @@ class tomcat::install {
 
    package { $package:
       ensure => $release,
-   }
+   } 
 
-   file { $confdir:
+   -> file { $confdir:
       ensure => directory,
       owner  => 'root',
       group  => $group,

@@ -59,9 +59,7 @@ define tomcat::server(
    $manage    = true,
 ) {
 
-   if ! defined(Class['tomcat']) {
-      fail('You have to define the class tomcat first.')
-   }
+   require tomcat
 
    if $tomcat::standalone {
       fail('Your using tomcat as standalone server')
