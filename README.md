@@ -4,8 +4,10 @@
 
 1. [Overview - What is the apache module?](#overview)
 2. [Module Description](#module description)
+
 2.1. [Compatibility] (#compatibily)
 2.2. [Requirements] (#requirements)
+
 3. [Setup](#setup)
 4. [Usage](#usage)
 
