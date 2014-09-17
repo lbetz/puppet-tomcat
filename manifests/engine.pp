@@ -50,25 +50,24 @@ define tomcat::engine(
 
    validate_hash($realms)
 
-   $owner   = $params::owner
-   $group   = $params::group
    $version = $tomcat::version
+
    if $hosts {
       validate_hash($hosts)
-      $_hosts = $hosts }
+      if ! has_key($hosts, $default_host) {
+         warning("The defined default host '${default_host}' doesn't exist, adding a default entry.")
+         $_hosts = merge($hosts, { "${default_host}" => $tomcat::hosts['localhost'] }) }
+      else {
+        $_hosts = $hosts }
+      }
    else {
-      $_hosts = $params::defaults['hosts']
+      $_hosts = { "${default_host}" => $tomcat::hosts['localhost'] }
    }
    
-   # standalone
-   if $tomcat::config {
-      $basedir = $params::conf[$version]['catalina_home']
-      $confdir = $params::conf[$version]['confdir']
-   }
-   # multi instance
+   if $tomcat::standalone {
+      $confdir = $params::conf[$version]['confdir'] }
    else {
-      $basedir = "${tomcat::basedir}/${server}"
-      $confdir  = "${basedir}/conf"
+      $confdir = "${tomcat::basedir}/${server}/conf"
    }
 
    concat::fragment { "server.xml-${name}-header":
@@ -83,11 +82,12 @@ define tomcat::engine(
       order   => "50_${service}_89",
    }
 
+   # todo: maybe change the ownership
    file { "${confdir}/${engine}":
       ensure => directory,
-      owner  => $owner,
-      group  => $group,
-      mode   => '2750',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '2775',
    }
 
    create_resources(tomcat::host,

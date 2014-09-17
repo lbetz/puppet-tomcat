@@ -241,7 +241,8 @@ Variables to use:
 * `DJAVA_AWT_HEADLESS` true|false
 * `JAVA_XMX` 
 * `JAVA_XX_MAXPERMSIZE`
-Use ADD_JAVA_OPTS for all other environment variables.
+
+Use `ADD_JAVA_OPTS` for all other environment variables.
 
 ####Defined Type: `tomcat::resource`
 

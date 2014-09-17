@@ -74,15 +74,10 @@ define tomcat::connector(
 
    $version         = $tomcat::version
 
-   # standalone
-   if $tomcat::config {
-      $basedir = $params::conf[$version]['catalina_home']
-      $confdir = $params::conf[$version]['confdir']
-   }
-   # multi instance
+   if $tomcat::standalone {
+      $confdir = $params::conf[$version]['confdir'] }
    else {
-      $basedir = "${tomcat::basedir}/${server}"
-      $confdir  = "${basedir}/conf"
+      $confdir = "${tomcat::basedir}/${server}/conf"
    }
 
    concat::fragment { "server.xml-${name}":

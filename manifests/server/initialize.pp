@@ -1,26 +1,6 @@
-# == private Define Resource: tomcat::server::initialize
-#
-# Full description of define tomcat::server::initialize here.
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*ensure*]
-#   present or running (present), stopped
-#
-# [*java_home*]
-#   java_home directory where to find the java binary
-#
-# [*setenv*]
-#   Handles environment variables in 'bin/setenv.sh'.
-#
-# === Authors
-#
-# Author Lennart Betz <lennart.betz@netways.de>
-#
 define tomcat::server::initialize(
-   $ensure = 'present',
+   $user,
+   $group,
    $java_home,
    $setenv,
 ) {
@@ -29,52 +9,29 @@ define tomcat::server::initialize(
       fail("tomcat::server::initialize is a private define resource of module tomcat, you're not able to use.")
    }
 
-   # used by init script
-   $version         = $tomcat::version
-   $catalina_home   = $params::conf[$version]['catalina_home']
-   $catalina_script = $params::conf[$version]['catalina_script']
-   $server          = $title
-   $owner           = $params::conf[$version]['owner']
-   $group           = $params::conf[$version]['group']
+   $version       = $tomcat::version
 
-   # standalone
-   if $tomcat::config {
-      $basedir = $params::conf[$version]['catalina_home']
-      $bindir  = $params::conf[$version]['bindir']
-      $initd   = $title
-   }
-   # multi instance
-   else {
-      $basedir = "${tomcat::basedir}/${title}"
-      $bindir  = "${basedir}/bin"
-      $initd   = "tomcat-${title}"
+   if $tomcat::standalone {
+      $sysconfig     = $params::conf[$version]['sysconfig']
+      $catalina_home = $params::conf[$version]['catalina_home']
+      $catalina_base = $catalina_home
+      $catalina_pid  = $params::conf[$version]['catalina_pid']
+      $tempdir       = $params::conf[$version]['tempdir']
+   } else {
+      $basedir       = "${tomcat::basedir}/${title}"
+      $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
+      $catalina_home = $params::conf[$version]['catalina_home']
+      $catalina_base = $basedir
+      $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
+      $tempdir       = "${basedir}/temp"
    }
 
-   file { "/etc/init.d/${initd}":
-      ensure => $ensure ? {
-         absent  => 'absent',
-         default => file,
-      },
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-      content => template('tomcat/tomcat.init.erb'),
+   file { $sysconfig:
+      ensure  => file,
+      owner   => 'root',
+      group   => $group,
+      mode    => '0664',
+      content => template('tomcat/tomcat6.erb'),
    }
 
-   if $ensure != 'absent' {
-      file { "${bindir}/setenv.sh":
-         ensure  => file,
-         owner   => $owner,
-         group   => $group,
-         mode    => '0570',
-         content => template('tomcat/setenv.sh.erb'),
-      }
-
-      file { "${bindir}/setenv-local.sh":
-         ensure  => file,
-         owner   => $owner,
-         group   => $group,
-         mode    => '0570',
-      }
-   }
 }

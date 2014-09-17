@@ -41,28 +41,24 @@ define tomcat::service(
    validate_string($service)
 
    $version = $tomcat::version
+
    if $engine {
       validate_hash($engine)
       $_engine = $engine }
    else {
-      $_engine = $params::defaults['engine']
+      $_engine = $tomcat::engine
    }
    if $connectors {
       validate_hash($connectors)
       $_connectors = $connectors }
    else {
-      $_connectors = $params::defaults['connectors']
+      $_connectors = $tomcat::connectors
    }
 
-   # standalone
-   if $tomcat::config {
-      $basedir = $params::conf[$version]['catalina_home']
-      $confdir = $params::conf[$version]['confdir']
-   }
-   # multi instance
+   if $tomcat::standalone {
+      $confdir = $params::conf[$version]['confdir'] }
    else {
-      $basedir = "${tomcat::basedir}/${server}"
-      $confdir  = "${basedir}/conf"
+      $confdir = "${tomcat::basedir}/${server}/conf"
    }
 
    concat::fragment { "server.xml-${name}-header":

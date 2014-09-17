@@ -1,8 +1,6 @@
 class { 'tomcat':
    version => '6',
-   config  => {
-      managed => false,
-   }
+   manage  => false,
 }
 
 file { '/etc/tomcat6/server.xml':
@@ -10,6 +8,6 @@ file { '/etc/tomcat6/server.xml':
    owner  => 'root',
    group  => 'root',
    mode   => '0644',
-   source => 'puppet:///modules/tomcat/example-server.xml',
-   notify => Tomcat::Server::Service['tomcat6'],
+   source => 'puppet:///modules/tomcat/example1-tomcat6-server.xml',
+   notify => Class['tomcat'],
 }

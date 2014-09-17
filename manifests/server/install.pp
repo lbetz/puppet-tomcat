@@ -1,80 +1,40 @@
-# == private Define Resource: tomcat::server::install
-#
-# === Authors
-#
-# Author Lennart Betz <lennart.betz@netways.de>
-#
-define tomcat::server::install {
+define tomcat::server::install(
+   $user,
+   $group,
+) {
 
    if $module_name != $caller_module_name {
       fail("tomcat::server::install is a private define resource of module tomcat, you're not able to use.")
    }
 
-   $version = $tomcat::version
-   $owner   = $params::conf[$version]['owner']
-   $group   = $params::conf[$version]['group']
+   $basedir       = "${tomcat::basedir}/${title}"
+   $version       = $tomcat::version
+   $initd         = $params::conf[$version]['initd']
 
-   # standalone
-   if $tomcat::config {
-      $tempdir   = $params::conf[$version]['tempdir']
-      $workdir   = $params::conf[$version]['workdir']
-      $webappdir = $params::conf[$version]['webappdir']
-      $confdir   = $params::conf[$version]['confdir']
-   }
-   # multi instance
-   else {
-      $basedir   = "${tomcat::basedir}/${title}"
-      $logdir    = "${basedir}/logs"
-      $tempdir   = "${basedir}/temp"
-      $workdir   = "${basedir}/work"
-      $webappdir = "${basedir}/webapps"
-      $bindir    = "${basedir}/bin"
-      $confdir   = "${basedir}/conf"
-      $libdir    = "${basedir}/lib"
-
-      file { $basedir:
-         ensure => directory,
-         owner  => 'root',
-         group  => 'root',
-         mode   => '0755',
-      }
-   
-      file { $logdir:
-         ensure => directory,
-         owner  => $owner,
-         group  => 'root',
-         mode   => '0755',
-      }
-
-      file { $bindir:
-         ensure => directory,
-         owner  => 'root',
-         group  => 'root',
-         mode   => '0755',
-      }
-
-      file { $libdir:
-         ensure => directory,
-         owner  => 'root',
-         group  => 'root',
-         mode   => '0755',
-      }
-   }
-
-   # defined here to benefit from implicit dependency
-   # for some config files like context.xml
-   file { $confdir:
+   file { [$basedir, "${basedir}/bin", "${basedir}/lib", "${basedir}/webapps", "${basedir}/work"]:
       ensure => directory,
       owner  => 'root',
-      group  => $group,
-      mode   => '2775',
+      group  => 'root',
+      mode   => '0755',
    }
 
-   file { [$tempdir, $workdir, $webappdir]:
+   file { "${basedir}/conf":
       ensure => directory,
       owner  => 'root',
       group  => $group,
       mode   => '0775',
+   }
+
+   file { ["${basedir}/logs", "${basedir}/temp"]:
+      ensure => directory,
+      owner  => $user,
+      group  => 'root',
+      mode   => '0755',
+   }
+
+   file { "${initd}-${title}":
+      ensure => symlink,
+      target => $initd
    }
 
 }

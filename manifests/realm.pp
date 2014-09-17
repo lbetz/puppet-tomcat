@@ -80,15 +80,10 @@ define tomcat::realm(
 
    $version = $tomcat::version
 
-   # standalone
-   if $tomcat::config {
-      $basedir = $params::conf[$version]['catalina_home']
-      $confdir = $params::conf[$version]['confdir']
-   }
-   # multi instance
+   if $tomcat::standalone {
+      $confdir = $params::conf[$version]['confdir'] }
    else {
-      $basedir = "${tomcat::basedir}/${server}"
-      $confdir  = "${basedir}/conf"
+      $confdir = "${tomcat::basedir}/${server}/conf"
    }
 
    $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.keys.sort.each do |key| -%> <%= key %>='<%= @attrs[key] %>'<% end -%>")
