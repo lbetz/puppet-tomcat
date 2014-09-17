@@ -1,12 +1,12 @@
 {
   "author": "Lennart Betz",
   "name": "puppet-tomcat",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "source": "git://github.com/lbetz/puppet-tomcat",
   "license": "GPL v2",
   "project_page": "http://github.com/lbetz/puppet-tomcat",
-  "description": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
-  "summary": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
+  "description": "Setup and configure Apache Tomcat on RedHat/CentOS",
+  "summary": "Setup and configure Apache Tomcat on RedHat/CentOS",
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
@@ -22,13 +22,6 @@
         "6"
       ]
     }
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    },
   ],
   "requirements": [
     { "name": "puppet", "version_requirement": "3.x" }
