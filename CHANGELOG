@@ -5,7 +5,7 @@ Summary
 Added debian support.
 
 Changes:
-- init scripts now copied with changed the proviedes field
+- init scripts now copied and the the proviedes field changed
 
 2014-09-17 0.3.0
 
