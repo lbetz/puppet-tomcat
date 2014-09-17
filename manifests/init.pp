@@ -127,7 +127,7 @@ class tomcat(
       ensure => $ensure,
       enable => $enable,
       hasstatus => false,
-      pattern => "-Dcatalina.base=${params::conf[$version]['catalina_home']}",
+      pattern => "-Dcatalina.base=${params::conf[$version]['catalina_base']}",
    }
    -> anchor { 'tomcat::end': }
 
