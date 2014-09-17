@@ -1,3 +1,27 @@
+# == private Define Resource: tomcat::server::initialize
+#
+# Full description of define tomcat::server::initialize here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*user*]
+#   user context for running of this instance.
+#
+# [*group*]
+#   same for group
+#
+# [*java_home*]
+#   java_home directory where to find the java binary
+#
+# [*setenv*]
+#   Handles environment variables in sysconfig file.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::initialize(
    $user,
    $group,

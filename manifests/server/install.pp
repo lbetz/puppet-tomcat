@@ -1,3 +1,21 @@
+# == private Define Resource: tomcat::server::install
+#
+# Full description of define tomcat::server::install here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*user*]
+#   user context for running of this instance.
+#
+# [*group*]
+#   same for group
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::install(
    $user,
    $group,

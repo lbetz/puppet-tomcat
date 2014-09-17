@@ -1,3 +1,11 @@
+# == private Class: tomcat::install
+#
+# Full description of define tomcat::install here.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 class tomcat::install {
 
    if $module_name != $caller_module_name {

@@ -1,6 +1,24 @@
+# == private Define Resource: tomcat::server::service
+#
+# Full description of define tomcat::server::service here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*ensure*]
+#   present or running (present), stopped
+#
+# [*enable*]
+#   Enables or disableis the service to start at boot.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::service(
-   $ensure = running,
-   $enable = true,
+   $ensure,
+   $enable,
 ) {
 
    if $module_name != $caller_module_name {

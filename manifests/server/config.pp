@@ -1,3 +1,33 @@
+# == private Define Resource: tomcat::server::config
+#
+# Full description of define tomcat::server::config here.
+#
+# === Parameters
+#
+# Document parameters here.
+#
+# [*user*]
+#   user context for running of this instance.
+#
+# [*group*]
+#   same for group
+#
+# [*port*]
+#   Management port (default 8005) on localhost for this instance.
+#
+# [*listeners*]
+#   Hash of listeners in the global server section (server.xml).
+#
+# [*resources*]
+#   Hash of global resources in the server section (server.xml).
+#
+# [*services*]
+#   Hash of services and their attributes.
+#
+# === Authors
+#
+# Author Lennart Betz <lennart.betz@netways.de>
+#
 define tomcat::server::config(
    $user,
    $group,

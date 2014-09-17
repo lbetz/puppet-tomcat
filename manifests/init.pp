@@ -51,7 +51,7 @@
 #  }
 #
 #
-# Standalone or distro like file layout
+# Standalone in distro like file layout
 #
 #  class { tomcat:
 #    ensure  => stopped,
