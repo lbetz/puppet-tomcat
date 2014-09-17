@@ -55,7 +55,7 @@ define tomcat::server::initialize(
       owner   => 'root',
       group   => $group,
       mode    => '0664',
-      content => template('tomcat/tomcat6.erb'),
+      content => template('tomcat/sysconfig.erb'),
    }
 
 }
