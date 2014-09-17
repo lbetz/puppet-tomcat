@@ -39,52 +39,48 @@ class { 'tomcat': }
 To install tomcat 7 standalone with an AJP connector instead of HTTP use the following:
 ```puppet
 class { 'tomcat':
-  version => '7',
-  config  => {
-    services => {
-      Catalina => {
-        connectors => {
-          ajp-8009 => {
-            port     => '8009',
-            protocol => 'AJP/1.3',
-          },
+  version  => '7',
+  services => {
+    Catalina => {
+      connectors => {
+        ajp-8009 => {
+          port     => '8009',
+          protocol => 'AJP/1.3',
         },
       },
-    }, # services
-  },
+    },
+  }, # services
 }
 ```
 
 Or use this yaml file in your hiera datastore:
 ```yaml
 tomcat::version: '7'
-tomcat::config:
-  services:
-    Catalina:
-      connectors:
-        ajp-8009:
-          port: '8009'
-          protocol: 'AJP/1.3'
+tomcat::services:
+  Catalina:
+    connectors:
+      ajp-8009:
+        port: '8009'
+        protocol: 'AJP/1.3'
 ```
 
 ###Configure a virtual host
 
 Setup a new virtual host instead the default host 'localhost', using a JRE 6.
 ```yaml
-tomcat::config:
-  java_home: '/etc/alternatives/jre_1.6.0'
-  services: 
-    Catalina
-      engine:
-        Catalina:
-          default_host: 'www.example.com'
-          hosts:
-            www.example.com:
-              app_base: 'webapps'
-              unpack_wars: true
-              auto_deploy: true
-              xml_validation: false
-              xml_namespace_aware: false
+tomcat::java_home: '/etc/alternatives/jre_1.6.0'
+tomcat::services:
+  Catalina
+    engine:
+      Catalina:
+        default_host: 'www.example.com'
+        hosts:
+          www.example.com:
+            app_base: 'webapps'
+            unpack_wars: true
+            auto_deploy: true
+            xml_validation: false
+            xml_namespace_aware: false
 ```
  
 Configure and manage another virtual host. First part of the title is the servername, tomcat6 or tomcat7 for standalone server. The second part is the service, the third the engine there the virtual host 'www.example.com' belongs to.
@@ -99,11 +95,12 @@ tomcat::host { 'tomcat6:Catalina:Catalina:www.example.com':
 
 ###Configure multiple instances
 
-For using tomcat as multi instance server, set the config parameter to false. That will shutdown and
+For using tomcat as multi instance server, set ensure to 'stopped' and enable to 'false'. That will shutdown and
 disable the the standalone server.
 ```puppet
 class { 'tomcat':
-   config  => false,
+   ensure => stopped,
+   enable => false,
 }
 ```
 
@@ -112,15 +109,16 @@ All configuration files and webapps for instances of tomcat will be stored under
 /var/tomcat in a subdirectory named as the tomcat::server title.
 ```puppet
 class { 'tomcat':
+   ensure  => stopped,
+   enable  => false,
    version => '6',
    release => '6.0.24-72.el6_5',
    basedir => '/var/tomcat',
-   config  => false,
 }
 ```
 
 Setup a new instance of tomcat, using a Java Runtime Environment 1.6.0 and management port 8005.
-Base directory for this instance is $basdir/myapp1, $basedir (default /var/www) set in tomcat class. 
+Base directory for this instance is $basdir/myapp1, $basedir (default /var/tomcat) set in tomcat class. 
 ````puppet
 tomcat::server { 'myapp1':
    ensure   => 'running',
@@ -138,14 +136,36 @@ tomcat::server { 'myapp1':
 
 **Parameters within `tomcat`:**
 
+#####`ensure`
+present or running (present), stopped
+
+#####`enable`
+Enables (true, default) or disables (false) the service to start at boot.
+
 #####`version`
 The version of Apache Tomcat server, supported versions are 6 (default) and 7.
 
 #####`release`
 Valid values are 'latest', 'installed' or an exact release version, i.e. '6.0.24-64.el6_5'.
 
-#####`config`
-Hash to configure a standalone server. You have to set config to false for using more than one instance.
+#####`port`
+Management port (default 8005) on localhost.
+
+#####`listeners`
+Hash of listeners in the global server section (server.xml).
+
+#####`resources`
+Hash of global resources in the server section (server.xml).
+
+#####`services`
+Hash of services and their attributes.
+
+#####`manage`
+Enables (default) the configuration by this module. Disable means, that you have
+to manage the configuration in server.xml outside and notify the service.
+
+#####`setenv`
+Handles environment variables in sysconfig file.
 
 #####`basedir`
 Base directory where to install server instances and their configurations. Directory
@@ -153,13 +173,61 @@ Base directory where to install server instances and their configurations. Direc
 
 ####Defined Type: `tomcat::server`
 
+Notice: parameters you set in declaration of class `tomcat` acts as defaults for `tomcat::server`.
+
 **Parameters within `tomcat::server`:**
 
 #####`ensure`
 Valid values are present or running (present), stopped.
 
 #####`enabled`
-Enable (true, default) or disable (false) the service to start at boot.
+Enables (true, default) or disables (false) the service to start at boot.
+
+#####`user`
+user context for running of this instance.
+
+#####`group`
+same for group
+```puppet
+class { 'tomcat':
+   ensure  => stopped,
+   enable  => false,
+   version => 6,
+}
+
+tomcat::server { 'myapp1': }
+
+group { 'myapp2':
+   ensure => present,
+}
+
+user { 'myapp2':
+   ensure => present,
+   gid    => 'myapp2',
+   shell  => '/sbin/nologin',
+   home   => '/var/tomcat/myapp1',
+} ->
+
+tomcat::server { 'myapp2':
+   user     => 'myapp2',
+   group    => 'myapp2',
+   port     => '8006',
+   services => {
+      'Catalina' => {
+         connectors => {
+            'ajp-8009' => {
+               port => '8009',
+               protocol => 'AJP/1.3',
+               redirect_port => '8443',
+            },
+         },
+      },
+   },
+}
+```
+
+#####`port`
+Management port (default 8005) on localhost for this instance.
 
 #####`listeners`
 Hash of listeners in the global server section (server.xml). Default, for Tomcat 6 
@@ -183,9 +251,6 @@ rather for Tomcat 7
 },
 ```
 
-#####`port`
-Management port (default 8005) on localhost for this instance.
-
 #####`resources`
 Hash of global resources in the server section (server.xml), default sets to:
 ```puppet
@@ -207,17 +272,18 @@ Hash of services and their attributes.
 #####`java_home`
 Directory where to find the java binary in subdirectory bin.
 
-#####`managed`
+#####`manage`
 Enables (default) the configuration of server.xml by this module. Disable means, that
 you have to manage the configuration outside and start/restart the service.
 ```puppet
 class { 'tomcat':
+   ensure  => stopped,
+   enable  => false,
    version => '6',
-   config  => false,
-} ->
+}
 
 tomcat::server { 'myapp1':
-   managed => false,
+   manage => false,
 }
 
 file { '/var/tomcat/myapp1/conf/server.xml':
@@ -229,7 +295,7 @@ file { '/var/tomcat/myapp1/conf/server.xml':
    notify => Tomcat::Server::Service['myapp1'],
 }
 ```
-There's a bug in the use of anchor, so Notifying Tomcat::Server does not work, yet. 
+Notice notifying Tomcat::Server does not work, you have to do this against Tomcat::Server::Service. 
 
 #####`setenv`
 Handles environment variables in 'bin/setenv.sh'.
@@ -243,6 +309,8 @@ Variables to use:
 * `JAVA_XX_MAXPERMSIZE`
 
 Use `ADD_JAVA_OPTS` for all other environment variables.
+```puppet
+setenv => [ 'ADD_JAVA_OPTS="-Xminf0.1 -Xmaxf0.3"' ]
 
 ####Defined Type: `tomcat::resource`
 

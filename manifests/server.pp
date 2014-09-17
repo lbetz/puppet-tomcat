@@ -10,7 +10,7 @@
 #   present or running (present), stopped
 #
 # [*enable*]
-#   Enable (true, default) or disable (false) the service to start at boot.
+#   Enables (true, default) or disables (false) the service to start at boot.
 #
 # [*user*]
 #   user context for running of this instance.
@@ -18,11 +18,11 @@
 # [*group*]
 #   same for group
 #
-# [*listeners*]
-#   Hash of listeners in the global server section (server.xml).
-#
 # [*port*]
 #   Management port (default 8005) on localhost for this instance.
+#
+# [*listeners*]
+#   Hash of listeners in the global server section (server.xml).
 #
 # [*resources*]
 #   Hash of global resources in the server section (server.xml).
