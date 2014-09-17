@@ -53,6 +53,14 @@ define tomcat::server::config(
 
    if $manage {
 
+      if $::osfamily == 'debian' {
+         file { "${confdir}/policy.d":
+            ensure  => file,
+            recurse => true,
+            source  => 'file:/etc/tomcat6/policy.d',
+         }
+      }
+
       concat { "${confdir}/server.xml":
          owner   => 'root',
          group   => $group,

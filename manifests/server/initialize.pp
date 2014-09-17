@@ -38,7 +38,7 @@ define tomcat::server::initialize(
    if $tomcat::standalone {
       $sysconfig     = $params::conf[$version]['sysconfig']
       $catalina_home = $params::conf[$version]['catalina_home']
-      $catalina_base = $catalina_home
+      $catalina_base = $params::conf[$version]['catalina_base']
       $catalina_pid  = $params::conf[$version]['catalina_pid']
       $tempdir       = $params::conf[$version]['tempdir']
    } else {

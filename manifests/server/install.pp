@@ -27,6 +27,7 @@ define tomcat::server::install(
 
    $basedir       = "${tomcat::basedir}/${title}"
    $version       = $tomcat::version
+   $service       = $params::conf[$version]['service']
    $initd         = $params::conf[$version]['initd']
 
    file { [$basedir, "${basedir}/bin", "${basedir}/lib", "${basedir}/webapps", "${basedir}/work"]:
@@ -50,9 +51,17 @@ define tomcat::server::install(
       mode   => '0755',
    }
 
+   exec { "change provider in ${initd}-${title}":
+      path    => '/bin:/usr/bin',
+      command => "sed 's|\\(^#\\s*Provides:\\s*\\)tomcat6$|\\1${service}-${title}|g' ${initd} > ${initd}-${title}",
+      unless  => "stat ${initd}-${title}",
+   } ->
+
    file { "${initd}-${title}":
-      ensure => symlink,
-      target => $initd
+      ensure => file,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
    }
 
 }

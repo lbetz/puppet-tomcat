@@ -1,3 +1,12 @@
+2014-09-17 0.3.1
+
+Summary
+
+Added debian support.
+
+Changes:
+- init scripts now copied with changed the proviedes field
+
 2014-09-17 0.3.0
 
 Summary

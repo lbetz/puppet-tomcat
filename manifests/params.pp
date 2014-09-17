@@ -13,7 +13,8 @@ class tomcat::params {
                          'group'           => 'tomcat',
                          'sysconfig'       => '/etc/sysconfig/tomcat6',
                          'catalina_home'   => '/usr/share/tomcat6',
-                         'catalina_pid'    => '/var/run/tomcat6',
+                         'catalina_base'   => '/usr/share/tomcat6',
+                         'catalina_pid'    => '/var/run/tomcat6.pid',
                          'package'         => 'tomcat6',
                          'service'         => 'tomcat6',
                          'bindir'          => '/usr/share/tomcat6/bin',
@@ -30,7 +31,8 @@ class tomcat::params {
                          'group'           => 'tomcat',
                          'sysconfig'       => '/etc/sysconfig/tomcat',
                          'catalina_home'   => '/usr/share/tomcat',
-                         'catalina_pid'    => '/var/run/tomcat',
+                         'catalina_base'   => '/usr/share/tomcat',
+                         'catalina_pid'    => '/var/run/tomcat.pid',
                          'package'         => 'tomcat',
                          'service'         => 'tomcat',
                          'bindir'          => '/usr/share/tomcat/bin',
@@ -41,6 +43,49 @@ class tomcat::params {
                          'webappdir'       => '/var/lib/tomcat/webapps',
                          'workdir'         => '/var/cache/tomcat/work',
                          'initd'           => '/etc/init.d/tomcat',
+                      },
+         }
+
+      }
+
+      'debian': {
+         $basedir   = '/var/tomcat'
+         $java_home = '/usr/lib/jvm/default-java/jre'
+         $conf      = { '6' => {
+                         'owner'           => 'tomcat6',
+                         'group'           => 'tomcat6',
+                         'sysconfig'       => '/etc/default/tomcat6',
+                         'catalina_home'   => '/usr/share/tomcat6',
+                         'catalina_base'   => '/var/lib/tomcat6',
+                         'catalina_pid'    => '/var/run/tomcat6.pid',
+                         'package'         => 'tomcat6',
+                         'service'         => 'tomcat6',
+                         'bindir'          => '/usr/share/tomcat6/bin',
+                         'confdir'         => '/etc/tomcat6',
+                         'libdir'          => '/usr/share/tomcat6/lib',
+                         'logdir'          => '/var/log/tomcat6',
+                         'tempdir'         => '/var/cache/tomcat6',
+                         'webappdir'       => '/var/lib/tomcat6/webapps',
+                         'workdir'         => '/var/cache/tomcat6/work',
+                         'initd'           => '/etc/init.d/tomcat6',
+                      },
+                      '7' => {
+                         'owner'           => 'tomcat7',
+                         'group'           => 'tomcat7',
+                         'sysconfig'       => '/etc/default/tomcat7',
+                         'catalina_home'   => '/usr/share/tomcat7',
+                         'catalina_base'   => '/var/lib/tomcat7',
+                         'catalina_pid'    => '/var/run/tomcat7.pid',
+                         'package'         => 'tomcat7',
+                         'service'         => 'tomcat7',
+                         'bindir'          => '/usr/share/tomcat7/bin',
+                         'confdir'         => '/etc/tomcat7',
+                         'libdir'          => '/usr/share/tomcat7/lib',
+                         'logdir'          => '/var/log/tomcat7',
+                         'tempdir'         => '/var/cache/tomcat7',
+                         'webappdir'       => '/var/lib/tomcat7/webapps',
+                         'workdir'         => '/var/cache/tomcat7/work',
+                         'initd'           => '/etc/init.d/tomcat7',
                       },
          }
 
