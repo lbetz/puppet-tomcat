@@ -1,4 +1,4 @@
-2014-09-16 0.3.0
+2014-09-17 0.3.0
 
 Summary
 
@@ -10,11 +10,12 @@ Changes:
   but using the pattern parameter instead of init script status.
   (RedHat has problems to differ between instances)
 - parameter moved from managed to manage
-  manage=false now means you have to manage server.xml AND sysconfig or default file
+  manage=false now means you have to manage server.xml
 - config parameter is removed, now please
   use parameter enable=false and ensure=stopped to set to standalone
 - now the parameter listener, service, resources and java_home set for class tomcat,
   are used also as defaults for server instances in multi server mode. 
+- setenv are moved to sysconfig, classpath removed
 
 2014-08-27 0.2.3
 
