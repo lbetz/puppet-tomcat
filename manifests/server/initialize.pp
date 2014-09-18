@@ -33,7 +33,8 @@ define tomcat::server::initialize(
       fail("tomcat::server::initialize is a private define resource of module tomcat, you're not able to use.")
    }
 
-   $version       = $tomcat::version
+   $version = $tomcat::version
+   $osfamily = $::osfamily
 
    if $tomcat::standalone {
       $sysconfig     = $params::conf[$version]['sysconfig']

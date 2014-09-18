@@ -52,7 +52,7 @@ class tomcat::params {
          $basedir   = '/var/tomcat'
          $java_home = '/usr/lib/jvm/default-java/jre'
          $conf      = { '6' => {
-                         'owner'           => 'tomcat6',
+                         'user'            => 'tomcat6',
                          'group'           => 'tomcat6',
                          'sysconfig'       => '/etc/default/tomcat6',
                          'catalina_home'   => '/usr/share/tomcat6',
@@ -70,7 +70,7 @@ class tomcat::params {
                          'initd'           => '/etc/init.d/tomcat6',
                       },
                       '7' => {
-                         'owner'           => 'tomcat7',
+                         'user'            => 'tomcat7',
                          'group'           => 'tomcat7',
                          'sysconfig'       => '/etc/default/tomcat7',
                          'catalina_home'   => '/usr/share/tomcat7',
