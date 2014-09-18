@@ -51,17 +51,20 @@ define tomcat::server::install(
       mode   => '0755',
    }
 
+   file { "${initd}-${title}":
+      ensure  => file,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      replace => false,
+      source  => "file:${initd}"
+   } ~>
+
    exec { "change provider in ${initd}-${title}":
       path    => '/bin:/usr/bin',
       command => "sed 's|\\(^#\\s*Provides:\\s*\\)tomcat6$|\\1${service}-${title}|g' ${initd} > ${initd}-${title}",
-      unless  => "stat ${initd}-${title}",
-   } ->
-
-   file { "${initd}-${title}":
-      ensure => file,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
+      unless  => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
+      refreshonly => true,
    }
 
 }

@@ -53,7 +53,8 @@ define tomcat::server::config(
 
    if $manage {
 
-      if $::osfamily == 'debian' {
+      # initial copy of policy.d on debian systems for instances only
+      if ! $standalone and $::osfamily == 'debian' {
          file { "${confdir}/policy.d":
             ensure  => file,
             recurse => true,

@@ -90,9 +90,14 @@ class tomcat(
    validate_absolute_path($basedir)
    validate_bool($manage)
 
-   $user    = $params::conf[$version]['user']
-   $group   = $params::conf[$version]['group']
-   $service = $params::conf[$version]['service']
+   $user          = $params::conf[$version]['user']
+   $group         = $params::conf[$version]['group']
+   $sysconfig     = $params::conf[$version]['sysconfig']
+   $service       = $params::conf[$version]['service']
+   $catalina_home = $params::conf[$version]['catalina_home']
+   $catalina_base = $params::conf[$version]['catalina_base']
+   $catalina_pid  = $params::conf[$version]['catalina_pid']
+   $tempdir       = $params::conf[$version]['tempdir']
 
    if $ensure == 'stopped' and ! $enable {
       $standalone = false }
@@ -104,12 +109,13 @@ class tomcat(
    -> anchor { 'tomcat::begin': 
       notify => Service[$service],
    }
-   -> tomcat::server::initialize { $service:
-      user      => $user,
-      group     => $group,
-      java_home => $java_home,
-      setenv    => $setenv,
-      notify    => Service[$service],
+   -> file { $sysconfig:
+      ensure  => file,
+      owner   => 'root',
+      group   => $group,
+      mode    => '0664',
+      content => template('tomcat/sysconfig.erb'),      
+      notify  => Service[$service],
    }
    -> tomcat::server::config { $service:
       user      => $user,
