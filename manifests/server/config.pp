@@ -57,6 +57,7 @@ define tomcat::server::config(
          file { "${confdir}/policy.d":
             ensure  => file,
             recurse => true,
+            replace => false,
             source  => 'file:/etc/tomcat6/policy.d',
          }
       }
