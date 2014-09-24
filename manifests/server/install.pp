@@ -62,8 +62,8 @@ define tomcat::server::install(
 
    exec { "change provider in ${initd}-${title}":
       path    => '/bin:/usr/bin',
-      command => "sed 's|\\(^#\\s*Provides:\\s*\\)tomcat6$|\\1${service}-${title}|g' ${initd} > ${initd}-${title}",
-      unless  => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
+      command => "sed -i 's/^\\(#\\s*Provides:\\s*\\|NAME=\\)${service}$/\\1${service}-${title}/g' ${initd}-${title}",
+      #unless  => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
       refreshonly => true,
    }
 
