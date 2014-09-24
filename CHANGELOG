@@ -1,11 +1,11 @@
-2014-09-18 0.3.1
+2014-09-24 0.3.1
 
 Summary
 
 Added debian support.
 
 Changes:
-- init scripts now copied and the the provides field changed
+- init scripts now copied and the the provides field and var NAME (debian7) changed
 - define tomcat::server::initialize now is declared for multi instances only,
   for standalone a file resource inserted.
 

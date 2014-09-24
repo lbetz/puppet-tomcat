@@ -1,7 +1,7 @@
 class { 'tomcat':
    ensure  => stopped,
    enable  => false,
-   version => 7,
+   version => 6,
 }
 
 group { 'myapp1':
