@@ -1,5 +1,5 @@
 name    'lbetz-tomcat'
-version '0.3.2'
+version '0.3.1'
 source 'https://github.com/lbetz/puppet-tomcat'
 author 'Lennart Betz'
 license 'GPL v2'
