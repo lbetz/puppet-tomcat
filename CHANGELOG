@@ -1,3 +1,12 @@
+2014-10-12 0.3.2
+
+Summary
+
+Only fixes in this release.
+
+Fixes:
+- removed double suffix .pid for pid file
+
 2014-09-24 0.3.1
 
 Summary
@@ -5,7 +14,7 @@ Summary
 Added debian support.
 
 Changes:
-- init scripts now copied and the the provides field and var NAME (debian7) changed
+- init scripts now copied and the provides field and var NAME (debian7) changed
 - define tomcat::server::initialize now is declared for multi instances only,
   for standalone a file resource inserted.
 
