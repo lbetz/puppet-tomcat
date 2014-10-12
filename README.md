@@ -307,6 +307,7 @@ Variables to use:
 Use `ADD_JAVA_OPTS` for all other environment variables.
 ```puppet
 setenv => [ 'ADD_JAVA_OPTS="-Xminf0.1 -Xmaxf0.3"' ]
+```
 
 ####Defined Type: `tomcat::resource`
 
@@ -480,13 +481,11 @@ Hash of realms defined under this engine.
 ####Defined Type: `tomcat::realm`
 
 ```puppet
-tomcat::realm { 'myapp1:Catalina:Catalina:www.example:':
-}
+tomcat::realm { 'myapp1:Catalina:Catalina:www.example:': }
 ```
 
 ```puppet
-tomcat::realm { 'myapp1:Catalina:Catalina:*:':
-}
+tomcat::realm { 'myapp1:Catalina:Catalina:*:': }
 ```
 
 **Parameters within `tomcat::realm`:**
