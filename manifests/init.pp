@@ -39,7 +39,7 @@
 #   Handles environment variables in sysconfig file.
 #
 # [*basedir*]
-#    Base directory where to install server instances and their configurations. Directory 
+#    Base directory where to install server instances and their configurations. Directory
 #    'basedir' has to exist. Ignored for standalone setup (ensure => stopped, enable => false).
 #
 # === Examples
@@ -106,7 +106,7 @@ class tomcat(
    }
 
    class { 'install': }
-   -> anchor { 'tomcat::begin': 
+   -> anchor { 'tomcat::begin':
       notify => Service[$service],
    }
    -> file { $sysconfig:
@@ -114,7 +114,7 @@ class tomcat(
       owner   => 'root',
       group   => $group,
       mode    => '0664',
-      content => template('tomcat/sysconfig.erb'),      
+      content => template('tomcat/sysconfig.erb'),
       notify  => Service[$service],
    }
    -> tomcat::server::config { $service:

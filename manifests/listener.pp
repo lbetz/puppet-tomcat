@@ -6,7 +6,7 @@
 #
 # Using titles like 'server:class_name' are split off automaticly in parameters 'server'
 # and 'class_name'. That defines the listener 'class_name' in the configuration
-# file server.xml for tomcat server 'server'. 
+# file server.xml for tomcat server 'server'.
 #
 # [*server*]
 #    Name of tomcat server instance to add the listener,
@@ -17,7 +17,7 @@
 #    automaticly taken from 'title' then using 'title' like 'server:class_name' otherwise undef
 #
 # [*ssl_engine*]
-#    specify the ssl_engine, default 'undef' (disabled)    
+#    specify the ssl_engine, default 'undef' (disabled)
 #
 # === Authors
 #

@@ -9,7 +9,7 @@ The tomcat module allows you to set up and manage a standalone or multiple insta
 ###Compatibility
 
 This module is currently aimed at the RHEL and Debian packaged versions of Tomcat
-versions 6 and 7. 
+versions 6 and 7.
 
 It has only been tested on CentOS6 and Debian7 with the base OS tomcat 6 and
 tomcat 7 (EPEL for RHEL) packages.
@@ -78,7 +78,7 @@ tomcat::services:
             xml_validation: false
             xml_namespace_aware: false
 ```
- 
+
 Configure and manage another virtual host. First part of the title is the servername, tomcat6 or tomcat7 for standalone server. The second part is the service, the third the engine there the virtual host 'www.example.com' belongs to.
 
 tomcat::host { 'tomcat6:Catalina:Catalina:www.example.com':
@@ -114,7 +114,7 @@ class { 'tomcat':
 ```
 
 Setup a new instance of tomcat, using a Java Runtime Environment 1.6.0 and management port 8005.
-Base directory for this instance is $basdir/myapp1, $basedir (default /var/tomcat) set in tomcat class. 
+Base directory for this instance is $basdir/myapp1, $basedir (default /var/tomcat) set in tomcat class.
 ````puppet
 tomcat::server { 'myapp1':
    ensure   => 'running',
@@ -226,7 +226,7 @@ tomcat::server { 'myapp2':
 Management port (default 8005) on localhost for this instance.
 
 #####`listeners`
-Hash of listeners in the global server section (server.xml). Default, for Tomcat 6 
+Hash of listeners in the global server section (server.xml). Default, for Tomcat 6
 ```puppet
 'listeners' => {
   'org.apache.catalina.core.AprLifecycleListener' => { 'ssl_engine' => 'On', },
@@ -301,7 +301,7 @@ setenv => [ 'JAVA_XMX="256m"', 'JAVA_XX_MAXPERMSIZE="256m' ]
 Variables to use:
 * `DSUN_JAVA2D_OPENGL` true|false
 * `DJAVA_AWT_HEADLESS` true|false
-* `JAVA_XMX` 
+* `JAVA_XMX`
 * `JAVA_XX_MAXPERMSIZE`
 
 Use `ADD_JAVA_OPTS` for all other environment variables.
@@ -361,7 +361,7 @@ Listener with class_name 'class_name',
 automaticly taken from 'title' then using 'title' like 'server:class_name' otherwise undef.
 
 #####`ssl_engine`
-Specify the ssl_engine, default 'undef' (disabled).    
+Specify the ssl_engine, default 'undef' (disabled).
 
 ####Defined Type: `tomcat::service`
 

@@ -22,7 +22,7 @@ class tomcat::install {
 
    package { $package:
       ensure => $release,
-   } 
+   }
 
    -> file { $confdir:
       ensure => directory,

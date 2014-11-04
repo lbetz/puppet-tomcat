@@ -40,7 +40,7 @@
 #    Enables (default) the configuration of server.xml by this module. Disable means, that
 #    you have to manage the configuration outside and notify the service.
 #
-#       
+#
 # === Authors
 #
 # Author Lennart Betz <lennart.betz@netways.de>
@@ -97,7 +97,7 @@ define tomcat::server(
    if $java_home {
       validate_absolute_path($java_home)
       $_java_home = $java_home }
-   else { 
+   else {
       $_java_home = $tomcat::java_home
    }
    if $user { $_user = $user } else { $_user = $tomcat::user }
@@ -135,7 +135,7 @@ define tomcat::server(
    }
    else {
       anchor { "tomcat::server::${title}::begin": }
-      -> tomcat::server::service { $title: 
+      -> tomcat::server::service { $title:
          ensure => stopped,
          enable => false,
       } ->

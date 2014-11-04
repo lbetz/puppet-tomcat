@@ -6,7 +6,7 @@
 #
 # Using titles like 'server:service:engine:host' are split off automaticly in parameters 'server',
 # 'service', 'engine' and 'host'. That defines a host under 'engine' in section 'service' of the configuration
-# file 'server.xml' for tomcat server instance 'server'. 
+# file 'server.xml' for tomcat server instance 'server'.
 #
 # [*server*]
 #    Name of tomcat server instance to add the connector.
