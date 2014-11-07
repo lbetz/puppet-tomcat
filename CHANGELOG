@@ -1,3 +1,17 @@
+2014-11-06 0.3.3
+
+Summary
+
+Added systemd support, tested on CentOS 7 only
+
+Changes:
+- added TOMCAT_LOG to sysconfig/default file
+- create PID files before starting instances
+- remove default init and sysconfig/default file when using multi instances
+- systemd support, create and remove systemd service files and using
+  an exec resource for 'systemctl daemon-reload'
+- License changed to Apache 2.0
+
 2014-10-12 0.3.2
 
 Summary

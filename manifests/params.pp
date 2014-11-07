@@ -1,5 +1,11 @@
 class tomcat::params {
 
+   exec { 'tomcat::systemd::daemon-reload':
+      path        => '/bin',
+      command     => 'systemctl daemon-reload',
+      refreshonly => true,
+   }
+
    case $::osfamily {
 
       'redhat': {
@@ -7,9 +13,11 @@ class tomcat::params {
          $java_home = '/usr/lib/jvm/jre'
 
          if versioncmp($::operatingsystemrelease, '7.0') >= 0 {
-            $version = '7' }
+            $version = '7'
+            $systemd = true }
          else {
             $version = '6'
+            $systemd = false
          }
 
          $conf      = { '6' => {
@@ -57,9 +65,11 @@ class tomcat::params {
          $java_home = '/usr/lib/jvm/default-java/jre'
 
          if versioncmp($::operatingsystemrelease, '8.0') >= 0 {
-            $version = '7' }
+            $version = '7'
+            $systemd = true }
          else {
             $version = '6'
+            $systemd = false
          }
 
          $conf      = { '6' => {

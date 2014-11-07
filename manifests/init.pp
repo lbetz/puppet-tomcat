@@ -98,6 +98,7 @@ class tomcat(
    $catalina_base = $params::conf[$version]['catalina_base']
    $catalina_pid  = $params::conf[$version]['catalina_pid']
    $tempdir       = $params::conf[$version]['tempdir']
+   $logdir        = $params::conf[$version]['logdir']
 
    if $ensure == 'stopped' and ! $enable {
       $standalone = false }
@@ -110,12 +111,24 @@ class tomcat(
       notify => Service[$service],
    }
    -> file { $sysconfig:
-      ensure  => file,
+      ensure => $standalone ? {
+         true    => file,
+         default => absent,
+      },
       owner   => 'root',
       group   => $group,
       mode    => '0664',
       content => template('tomcat/sysconfig.erb'),
       notify  => Service[$service],
+   }
+   -> file { $catalina_pid:
+      ensure => $standalone ? {
+         true    => file,
+         default => absent,
+      },
+      owner  => $user,
+      group  => $group,
+      mode   => '0644',
    }
    -> tomcat::server::config { $service:
       user      => $user,

@@ -34,12 +34,14 @@ define tomcat::server::initialize(
    }
 
    $version       = $tomcat::version
+   $service       = $params::conf[$version]['service']
    $basedir       = "${tomcat::basedir}/${title}"
    $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
    $catalina_home = $params::conf[$version]['catalina_home']
    $catalina_base = $basedir
    $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
    $tempdir       = "${basedir}/temp"
+   $logdir        = "${basedir}/logs"
 
    file { $sysconfig:
       ensure  => file,
@@ -48,5 +50,12 @@ define tomcat::server::initialize(
       mode    => '0664',
       content => template('tomcat/sysconfig.erb'),
    }
+
+   file { $catalina_pid:
+     ensure => file,
+     owner  => $user,
+     group  => $group,
+     mode   => '0644',
+  }
 
 }

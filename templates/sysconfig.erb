@@ -25,6 +25,9 @@ _USER="<%= @user %>"
 TOMCAT<% if @osfamily == 'Debian' %><%= @version %><% end -%>
 _GROUP="<%= @group %>"
 
+TOMCAT<% if @osfamily == 'Debian' %><%= @version %><% end -%>
+_LOG="<%= @logdir %>/<%= @service %>-sysd.log"
+
 # Set the TOMCAT_PID location
 CATALINA_PID="<%= @catalina_pid %>"
 
