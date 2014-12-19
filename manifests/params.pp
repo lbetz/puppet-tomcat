@@ -1,12 +1,30 @@
 class tomcat::params {
 
-   $version = '6'
+   exec { 'tomcat::systemd::daemon-reload':
+      path        => '/bin',
+      command     => 'systemctl daemon-reload',
+      refreshonly => true,
+   }
+
+   exec { 'tomcat::systemd2::daemon-reload':
+      path        => '/bin',
+      command     => 'systemctl daemon-reload',
+      refreshonly => true,
+   }
 
    case $::osfamily {
 
       'redhat': {
          $basedir   = '/var/tomcat'
          $java_home = '/usr/lib/jvm/jre'
+
+         if versioncmp($::operatingsystemrelease, '7.0') >= 0 {
+            $version = '7'
+            $systemd = true }
+         else {
+            $version = '6'
+            $systemd = false
+         }
 
          $conf      = { '6' => {
                          'user'            => 'tomcat',
@@ -51,6 +69,15 @@ class tomcat::params {
       'debian': {
          $basedir   = '/var/tomcat'
          $java_home = '/usr/lib/jvm/default-java/jre'
+
+         if versioncmp($::operatingsystemrelease, '8.0') >= 0 {
+            $version = '7'
+            $systemd = true }
+         else {
+            $version = '6'
+            $systemd = false
+         }
+
          $conf      = { '6' => {
                          'user'            => 'tomcat6',
                          'group'           => 'tomcat6',

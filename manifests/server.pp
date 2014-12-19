@@ -40,7 +40,7 @@
 #    Enables (default) the configuration of server.xml by this module. Disable means, that
 #    you have to manage the configuration outside and notify the service.
 #
-#       
+#
 # === Authors
 #
 # Author Lennart Betz <lennart.betz@netways.de>
@@ -70,10 +70,12 @@ define tomcat::server(
    validate_bool($enable)
    validate_bool($manage)
 
-   $version   = $params::version
-   $initd     = "${params::conf[$version]['initd']}-${title}"
-   $sysconfig = "${params::conf[$version]['sysconfig']}-${title}"
-   $basedir   = "${tomcat::basedir}/${title}"
+   $version       = $params::version
+   $service       = $params::conf[$version]['service']
+   $initd         = "${params::conf[$version]['initd']}-${title}"
+   $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
+   $basedir       = "${tomcat::basedir}/${title}"
+   $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
 
    # set prameter defaults
    if $listeners {
@@ -97,7 +99,7 @@ define tomcat::server(
    if $java_home {
       validate_absolute_path($java_home)
       $_java_home = $java_home }
-   else { 
+   else {
       $_java_home = $tomcat::java_home
    }
    if $user { $_user = $user } else { $_user = $tomcat::user }
@@ -135,11 +137,11 @@ define tomcat::server(
    }
    else {
       anchor { "tomcat::server::${title}::begin": }
-      -> tomcat::server::service { $title: 
+      -> tomcat::server::service { $title:
          ensure => stopped,
          enable => false,
       } ->
-      file { [$initd, $sysconfig]:
+      file { [$initd, $sysconfig, $catalina_pid]:
          ensure => absent,
       } ->
       file { $basedir:
@@ -148,6 +150,13 @@ define tomcat::server(
          force   => true,
       } ->
       anchor { "tomact::server::${title}::end": }
+
+      if $params::systemd {
+         file { "/etc/systemd/system/${service}-${title}.service":
+            ensure => absent,
+            notify => Exec['tomcat::systemd::daemon-reload'],
+         }
+      }
    }
 
 }

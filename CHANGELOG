@@ -1,3 +1,20 @@
+2014-11-06 0.4.0
+
+Summary
+
+Added systemd support for CentOS7 and Debian8
+
+Changes:
+- added TOMCAT_LOG to sysconfig/default file
+- create PID files before starting instances
+- remove default init and sysconfig/default file when using multi instances
+- systemd support, create and remove systemd service files and using
+  an exec resource for 'systemctl daemon-reload'
+- License changed to Apache 2.0
+
+Fixes:
+- deleting catalina.pid before stopping service
+
 2014-10-12 0.3.2
 
 Summary
@@ -34,7 +51,7 @@ Changes:
 - config parameter is removed, now please
   use parameter enable=false and ensure=stopped to set to standalone
 - now the parameter listener, service, resources and java_home set for class tomcat,
-  are used also as defaults for server instances in multi server mode. 
+  are used also as defaults for server instances in multi server mode.
 - setenv are moved to sysconfig, classpath removed
 
 2014-08-27 0.2.3
@@ -48,7 +65,7 @@ Changes:
   so you will get now a standalone server with a default configuration.
 
 Features:
-- default connector http-8080 
+- default connector http-8080
 - default listeners
 - set default hosts to localhost
 - default engine 'Catalina'
@@ -74,7 +91,7 @@ Fixes:
 - dependency cycle in multi instance
 - concat dependency in service, engine, ...
 - change dependency between init script (file permission <-> service stopped)
-  for multi instance 
+  for multi instance
 
 2014-08-01 0.2.0
 

@@ -6,7 +6,7 @@
 #
 # Using titles like 'server:resource' are split off automaticly in parameters 'server'
 # and 'resource'. That defines a global resource 'resource' in the configuration
-# file server.xml for tomcat server instance 'server'. 
+# file server.xml for tomcat server instance 'server'.
 #
 # [*server*]
 #    Name of tomcat server instance to add a resource.
@@ -39,7 +39,7 @@ define tomcat::resource(
       default => regsubst($name, '^[^:]+:([^:]+)$', '\1'),
    },
    $auth        = 'container',
-   $type, 
+   $type,
    $extra_attrs = {},
 ) {
 

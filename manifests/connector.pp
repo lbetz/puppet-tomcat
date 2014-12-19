@@ -6,7 +6,7 @@
 #
 # Using titles like 'server:service:connector' are split off automaticly in parameters 'server',
 # 'service' and 'connector'. That defines the 'connector' in section 'service' in the configuration
-# file server.xml for tomcat server 'server'. 
+# file server.xml for tomcat server 'server'.
 #
 # [*server*]
 #    Name of tomcat server instance to add the connector.

@@ -6,7 +6,7 @@
 #
 # Using titles like 'server:service:engine' are split off automaticly in parameters 'server',
 # 'service' and 'engine'. That defines the engine 'engine' in section 'service' of the configuration
-# file 'server.xml' for tomcat server instance 'server'. 
+# file 'server.xml' for tomcat server instance 'server'.
 #
 # [*server*]
 #    Name of tomcat server instance to add the connector.
@@ -63,7 +63,7 @@ define tomcat::engine(
    else {
       $_hosts = { "${default_host}" => $tomcat::hosts['localhost'] }
    }
-   
+
    if $tomcat::standalone {
       $confdir = $params::conf[$version]['confdir'] }
    else {

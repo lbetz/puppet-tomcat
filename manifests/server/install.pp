@@ -29,6 +29,7 @@ define tomcat::server::install(
    $version       = $tomcat::version
    $service       = $params::conf[$version]['service']
    $initd         = $params::conf[$version]['initd']
+   $systemd       = $params::systemd
 
    file { [$basedir, "${basedir}/bin", "${basedir}/lib", "${basedir}/webapps", "${basedir}/work"]:
       ensure => directory,
@@ -51,20 +52,38 @@ define tomcat::server::install(
       mode   => '0755',
    }
 
-   file { "${initd}-${title}":
-      ensure  => file,
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0755',
-      replace => false,
-      source  => "file:${initd}"
-   } ~>
+   if $systemd and $::osfamily != 'debian' {
+      file { "/etc/systemd/system/${service}-${title}.service":
+         ensure  => file,
+         owner   => 'root',
+         group   => 'root',
+         mode    => '0644',
+         content => template('tomcat/systemd.service.erb'),
+         notify  => Exec['tomcat::systemd::daemon-reload'],
+      }
+   }
+   else {
+      if $systemd {
+        $notify = Exec['tomcat::systemd::daemon-reload']
+      }
 
-   exec { "change provider in ${initd}-${title}":
-      path    => '/bin:/usr/bin',
-      command => "sed -i 's/^\\(#\\s*Provides:\\s*\\|NAME=\\)${service}$/\\1${service}-${title}/g' ${initd}-${title}",
-      #unless  => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
-      refreshonly => true,
+      file { "${initd}-${title}":
+         ensure  => file,
+         owner   => 'root',
+         group   => 'root',
+         mode    => '0755',
+         replace => false,
+         source  => "file:${initd}"
+      } ~>
+
+      exec { "change provider in ${initd}-${title}":
+         path        => '/bin:/usr/bin',
+         command     => "sed -i 's/^\\(#\\s*Provides:\\s*\\|NAME=\\)${service}$/\\1${service}-${title}/g' ${initd}-${title}",
+         #unless     => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
+         refreshonly => true,
+         notify      => $notify,
+      }
+
    }
 
 }

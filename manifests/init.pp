@@ -39,7 +39,7 @@
 #   Handles environment variables in sysconfig file.
 #
 # [*basedir*]
-#    Base directory where to install server instances and their configurations. Directory 
+#    Base directory where to install server instances and their configurations. Directory
 #    'basedir' has to exist. Ignored for standalone setup (ensure => stopped, enable => false).
 #
 # === Examples
@@ -98,24 +98,49 @@ class tomcat(
    $catalina_base = $params::conf[$version]['catalina_base']
    $catalina_pid  = $params::conf[$version]['catalina_pid']
    $tempdir       = $params::conf[$version]['tempdir']
+   $logdir        = $params::conf[$version]['logdir']
 
    if $ensure == 'stopped' and ! $enable {
+      Anchor['tomcat::begin']
+        -> Service[$service]
+        -> File[$sysconfig]
+        -> File[$catalina_pid]
       $standalone = false }
    else {
+      Anchor['tomcat::begin']
+        -> File[$catalina_pid]
+        -> File[$sysconfig]
+        ~> Service[$service]
       $standalone = true
    }
 
-   class { 'install': }
-   -> anchor { 'tomcat::begin': 
-      notify => Service[$service],
+   class { 'install':
+      before => Anchor['tomcat::begin'],
    }
-   -> file { $sysconfig:
-      ensure  => file,
+
+   file { $catalina_pid:
+      ensure => $standalone ? {
+         true    => file,
+         default => absent,
+      },
+      owner  => $user,
+      group  => $group,
+      mode   => '0644',
+   }
+
+   file { $sysconfig:
+      ensure => $standalone ? {
+         true    => file,
+         default => absent,
+      },
       owner   => 'root',
       group   => $group,
       mode    => '0664',
-      content => template('tomcat/sysconfig.erb'),      
-      notify  => Service[$service],
+      content => template('tomcat/sysconfig.erb'),
+   }
+
+   anchor { 'tomcat::begin':
+      notify => Service[$service],
    }
    -> tomcat::server::config { $service:
       user      => $user,
