@@ -101,11 +101,21 @@ class tomcat(
    $logdir        = $params::conf[$version]['logdir']
 
    if $ensure == 'stopped' and ! $enable {
-      Service[$service] -> File[$catalina_pid]
+      Anchor['tomcat::begin']
+        -> Service[$service]
+        -> File[$sysconfig]
+        -> File[$catalina_pid]
       $standalone = false }
    else {
-      Service[$service] <- File[$catalina_pid]
+      Anchor['tomcat::begin']
+        -> File[$catalina_pid]
+        -> File[$sysconfig]
+        ~> Service[$service]
       $standalone = true
+   }
+
+   class { 'install':
+      before => Anchor['tomcat::begin'],
    }
 
    file { $catalina_pid:
@@ -118,11 +128,7 @@ class tomcat(
       mode   => '0644',
    }
 
-   class { 'install': }
-   -> anchor { 'tomcat::begin':
-      notify => Service[$service],
-   }
-   -> file { $sysconfig:
+   file { $sysconfig:
       ensure => $standalone ? {
          true    => file,
          default => absent,
@@ -131,7 +137,10 @@ class tomcat(
       group   => $group,
       mode    => '0664',
       content => template('tomcat/sysconfig.erb'),
-      notify  => Service[$service],
+   }
+
+   anchor { 'tomcat::begin':
+      notify => Service[$service],
    }
    -> tomcat::server::config { $service:
       user      => $user,

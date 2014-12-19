@@ -12,6 +12,9 @@ Changes:
   an exec resource for 'systemctl daemon-reload'
 - License changed to Apache 2.0
 
+Fixes:
+- deleting catalina.pid before stopping service
+
 2014-10-12 0.3.2
 
 Summary
