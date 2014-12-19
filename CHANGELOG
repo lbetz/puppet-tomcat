@@ -1,8 +1,8 @@
-2014-11-06 0.3.3
+2014-11-06 0.4.0
 
 Summary
 
-Added systemd support, tested on CentOS 7 only
+Added systemd support for CentOS7 and Debian8
 
 Changes:
 - added TOMCAT_LOG to sysconfig/default file

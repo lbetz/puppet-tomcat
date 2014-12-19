@@ -11,7 +11,7 @@ The tomcat module allows you to set up and manage a standalone or multiple insta
 This module is currently aimed at the RHEL and Debian packaged versions of Tomcat
 versions 6 and 7.
 
-It has only been tested on CentOS6 and Debian7 with the base OS tomcat 6 and
+It has only been tested on CentOS 6/7 and Debian 6/7/8 with the base OS tomcat 6 and
 tomcat 7 (EPEL for RHEL) packages.
 
 ###Requirements

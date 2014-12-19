@@ -1,7 +1,7 @@
 {
   "author": "Lennart Betz",
   "name": "puppet-tomcat",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "source": "git://github.com/lbetz/puppet-tomcat",
   "license": "Apache 2.0",
   "project_page": "http://github.com/lbetz/puppet-tomcat",
@@ -12,7 +12,8 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
