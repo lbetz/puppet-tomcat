@@ -10,7 +10,6 @@ group { 'myapp1':
 user { 'myapp1':
    ensure => present,
    gid    => 'myapp1',
-   shell  => '/sbin/nologin',
    home   => '/var/tomcat/myapp1',
 } ->
 

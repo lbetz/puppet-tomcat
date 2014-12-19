@@ -52,7 +52,7 @@ define tomcat::server::install(
       mode   => '0755',
    }
 
-   if $systemd {
+   if $systemd and $::osfamily != 'debian' {
       file { "/etc/systemd/system/${service}-${title}.service":
          ensure  => file,
          owner   => 'root',
@@ -63,6 +63,10 @@ define tomcat::server::install(
       }
    }
    else {
+      if $systemd {
+        $notify = Exec['tomcat::systemd::daemon-reload']
+      }
+
       file { "${initd}-${title}":
          ensure  => file,
          owner   => 'root',
@@ -73,11 +77,13 @@ define tomcat::server::install(
       } ~>
 
       exec { "change provider in ${initd}-${title}":
-         path    => '/bin:/usr/bin',
-         command => "sed -i 's/^\\(#\\s*Provides:\\s*\\|NAME=\\)${service}$/\\1${service}-${title}/g' ${initd}-${title}",
-         #unless  => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
+         path        => '/bin:/usr/bin',
+         command     => "sed -i 's/^\\(#\\s*Provides:\\s*\\|NAME=\\)${service}$/\\1${service}-${title}/g' ${initd}-${title}",
+         #unless     => "grep '^#\s*Provides:\s*${service}-${title}'  ${initd}-${title}",
          refreshonly => true,
+         notify      => $notify,
       }
+
    }
 
 }

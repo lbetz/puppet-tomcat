@@ -6,6 +6,12 @@ class tomcat::params {
       refreshonly => true,
    }
 
+   exec { 'tomcat::systemd2::daemon-reload':
+      path        => '/bin',
+      command     => 'systemctl daemon-reload',
+      refreshonly => true,
+   }
+
    case $::osfamily {
 
       'redhat': {
