@@ -1,0 +1,4 @@
+- define: tomcat::listener parameter ssl_engine validation
+- define: tomcat::connector parameters validation for scheme, executor and options
+- defines are privat? Yes: add validations No: include tomcat
+- define: tomcat::host defaults for params app_base, auto_deploy, unpack_wars, xml_validation, xml_namespace_aware

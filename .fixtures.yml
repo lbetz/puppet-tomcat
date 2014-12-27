@@ -1,0 +1,10 @@
+fixtures:
+  repositories:
+    stdlib:
+      repo: "git@github.com:puppetlabs/puppetlabs-stdlib.git"
+      ref: "origin/3.2.x"
+    concat:
+      repo: "git@github.com:puppetlabs/puppetlabs-concat.git"
+      ref: "origin/1.0.x"
+  symlinks:
+    "tomcat": "#{source_dir}"
