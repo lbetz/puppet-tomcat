@@ -3,9 +3,8 @@
   "name": "lbetz-tomcat",
   "version": "0.4.0",
   "source": "git://github.com/lbetz/puppet-tomcat",
-  "license": "Apache 2.0",
-  "project_page": "http://github.com/lbetz/puppet-tomcat",
-  "description": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
+  "license": "Apache-2.0",
+  "project_page": "http://github.com/lbetz/puppet-tomcat.git",
   "summary": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
   "operatingsystem_support": [
     {
@@ -36,14 +35,15 @@
   "requirements": [
     { "name": "puppet", "version_requirement": "3.x" }
   ],
+  "description": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
   "dependencies": [
     {
-      "version_requirement": ">= 3.2.1",
-      "name": "puppetlabs/stdlib"
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.2.1"
     },
     {
-      "version_requirement": ">= 1.0.1",
-      "name": "puppetlabs/concat"
+      "name": "puppetlabs/concat",
+      "version_requirement": ">= 1.0.1"
     }
   ]
 }
