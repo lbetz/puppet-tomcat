@@ -70,43 +70,43 @@ define tomcat::host(
   },
 ) {
 
-   validate_hash($contexts)
-   validate_hash($realms)
-   validate_string($server)
-   validate_string($service)
-   validate_string($engine)
-   validate_string($host)
+  validate_hash($contexts)
+  validate_hash($realms)
+  validate_string($server)
+  validate_string($service)
+  validate_string($engine)
+  validate_string($host)
 
-   $owner   = $params::owner
-   $group   = $params::group
-   $version = $tomcat::version
+  $owner   = $params::owner
+  $group   = $params::group
+  $version = $tomcat::version
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   concat::fragment { "server.xml-${name}-header":
-      target  => "${confdir}/server.xml",
-      content => template('tomcat/host-header.xml.erb'),
-      order   => "50_${service}_50_${host}_00",
-   }
+  concat::fragment { "server.xml-${name}-header":
+    target  => "${confdir}/server.xml",
+    content => template('tomcat/host-header.xml.erb'),
+    order   => "50_${service}_50_${host}_00",
+  }
 
-   concat::fragment { "server.xml-${name}-footer":
-      target  => "${confdir}/server.xml",
-      content => "\n         </Host>\n",
-      order   => "50_${service}_50_${host}_99",
-   }
+  concat::fragment { "server.xml-${name}-footer":
+    target  => "${confdir}/server.xml",
+    content => "\n         </Host>\n",
+    order   => "50_${service}_50_${host}_99",
+  }
 
-   file { "${confdir}/${service}/${host}":
-      ensure => directory,
-      owner  => $owner,
-      group  => $group,
-      mode   => '2750',
-   }
+  file { "${confdir}/${service}/${host}":
+    ensure => directory,
+    owner  => $owner,
+    group  => $group,
+    mode   => '2750',
+  }
 
-   create_resources(tomcat::realm,
-      hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:"), values($realms))))
+  create_resources(tomcat::realm,
+    hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:"), values($realms))))
 
 }

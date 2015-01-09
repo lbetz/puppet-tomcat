@@ -65,101 +65,96 @@
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 class tomcat(
-   $ensure    = running,
-   $enable    = true,
-   $release   = installed,
-   $version   = $params::version,
-   $port      = '8005',
-   $listeners = $params::listeners[$version],
-   $resources = $params::resources,
-   $services  = $params::services,
-   $java_home = $params::java_home,
-   $manage    = true,
-   $setenv    = [],
-   $basedir   = $params::basedir,
+  $ensure    = running,
+  $enable    = true,
+  $release   = installed,
+  $version   = $params::version,
+  $port      = '8005',
+  $listeners = $params::listeners[$version],
+  $resources = $params::resources,
+  $services  = $params::services,
+  $java_home = $params::java_home,
+  $manage    = true,
+  $setenv    = [],
+  $basedir   = $params::basedir,
 ) inherits tomcat::params {
 
-   validate_re($ensure, '^(running|stopped)$',
-      "${ensure} is not supported for ensure. Valid values are 'running' and 'stopped'.")
-   validate_bool($enable)
-   validate_re($version, '^[6-7]$', 'Supported versions are 6 and 7')
-   validate_hash($listeners)
-   validate_hash($resources)
-   validate_hash($services)
-   validate_absolute_path($java_home)
-   validate_absolute_path($basedir)
-   validate_bool($manage)
+  validate_re($ensure, '^(running|stopped)$',
+    "${ensure} is not supported for ensure. Valid values are 'running' and 'stopped'.")
+  validate_bool($enable)
+  validate_re($version, '^[6-7]$', 'Supported versions are 6 and 7')
+  validate_hash($listeners)
+  validate_hash($resources)
+  validate_hash($services)
+  validate_absolute_path($java_home)
+  validate_absolute_path($basedir)
+  validate_bool($manage)
 
-   $user          = $params::conf[$version]['user']
-   $group         = $params::conf[$version]['group']
-   $sysconfig     = $params::conf[$version]['sysconfig']
-   $service       = $params::conf[$version]['service']
-   $catalina_home = $params::conf[$version]['catalina_home']
-   $catalina_base = $params::conf[$version]['catalina_base']
-   $catalina_pid  = $params::conf[$version]['catalina_pid']
-   $tempdir       = $params::conf[$version]['tempdir']
-   $logdir        = $params::conf[$version]['logdir']
+  $user          = $params::conf[$version]['user']
+  $group         = $params::conf[$version]['group']
+  $sysconfig     = $params::conf[$version]['sysconfig']
+  $service       = $params::conf[$version]['service']
+  $catalina_home = $params::conf[$version]['catalina_home']
+  $catalina_base = $params::conf[$version]['catalina_base']
+  $catalina_pid  = $params::conf[$version]['catalina_pid']
+  $tempdir       = $params::conf[$version]['tempdir']
+  $logdir        = $params::conf[$version]['logdir']
 
-   if $ensure == 'stopped' and ! $enable {
-      Anchor['tomcat::begin']
-        -> Service[$service]
-        -> File[$sysconfig]
-        -> File[$catalina_pid]
-      $standalone = false }
-   else {
-      Anchor['tomcat::begin']
-        -> File[$catalina_pid]
-        -> File[$sysconfig]
-        ~> Service[$service]
-      $standalone = true
-   }
+  if $ensure == 'stopped' and ! $enable {
+    Anchor['tomcat::begin']
+      -> Service[$service]
+      -> File[$sysconfig]
+      -> File[$catalina_pid]
+    $standalone = false
+    $ensure_file = 'absent'
+    $_manage = false }
+  else {
+    Anchor['tomcat::begin']
+      -> File[$catalina_pid]
+      -> File[$sysconfig]
+      ~> Service[$service]
+    $standalone  = true
+    $ensure_file = 'file'
+    $_manage = $manage,
+  }
 
-   class { 'install':
-      before => Anchor['tomcat::begin'],
-   }
+  class { 'install':
+    before => Anchor['tomcat::begin'],
+  }
 
-   file { $catalina_pid:
-      ensure => $standalone ? {
-         true    => file,
-         default => absent,
-      },
-      owner  => $user,
-      group  => $group,
-      mode   => '0644',
-   }
+  file { $catalina_pid:
+    ensure => $ensure_file,
+    owner  => $user,
+    group  => $group,
+    mode   => '0644',
+  }
 
-   file { $sysconfig:
-      ensure => $standalone ? {
-         true    => file,
-         default => absent,
-      },
-      owner   => 'root',
-      group   => $group,
-      mode    => '0664',
-      content => template('tomcat/sysconfig.erb'),
-   }
+  file { $sysconfig:
+    ensure  => $ensure_file,
+    owner   => 'root',
+    group   => $group,
+    mode    => '0664',
+    content => template('tomcat/sysconfig.erb'),
+  }
 
-   anchor { 'tomcat::begin':
-      notify => Service[$service],
-   }
-   -> tomcat::server::config { $service:
-      user      => $user,
-      group     => $group,
-      port      => $port,
-      services  => $services,
-      listeners => $listeners,
-      resources => $resources,
-      manage    => $standalone ? {
-         false   => false,
-         default => $manage,
-      },
-   }
-   ~> service { $service:
-      ensure => $ensure,
-      enable => $enable,
-      hasstatus => false,
-      pattern => "-Dcatalina.base=${params::conf[$version]['catalina_base']}",
-   }
-   -> anchor { 'tomcat::end': }
+  anchor { 'tomcat::begin':
+    notify => Service[$service],
+  }
+  -> tomcat::server::config { $service:
+    user      => $user,
+    group     => $group,
+    port      => $port,
+    services  => $services,
+    listeners => $listeners,
+    resources => $resources,
+    manage    => $_manage,
+  }
+  ~> service { $service:
+    ensure    => $ensure,
+    enable    => $enable,
+    hasstatus => false,
+    pattern   => "-Dcatalina.base=${params::conf[$version]['catalina_base']}",
+  }
+  -> anchor { 'tomcat::end': }
 
 }

@@ -70,85 +70,85 @@ define tomcat::realm(
   },
 ) {
 
-   validate_hash($realms)
-   validate_hash($attrs)
-   validate_string($server)
-   validate_string($service)
-   validate_string($engine)
-   validate_string($realm)
-   validate_string($class_name)
+  validate_hash($realms)
+  validate_hash($attrs)
+  validate_string($server)
+  validate_string($service)
+  validate_string($engine)
+  validate_string($realm)
+  validate_string($class_name)
 
-   $version = $tomcat::version
+  $version = $tomcat::version
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.keys.sort.each do |key| -%> <%= key %>='<%= @attrs[key] %>'<% end -%>")
+  $_content = inline_template("<Realm className='<%= @class_name %>'<% @attrs.keys.sort.each do |key| -%> <%= key %>='<%= @attrs[key] %>'<% end -%>")
 
-   if $host {
-      validate_string($host)
-      if $realms != {} {
-         concat::fragment { "server.xml-${name}-header":
-            target  => "${confdir}/server.xml",
-            content => "            ${_content}>\n",
-            order   => "50_${service}_50_${host}_22_${class_name}_00",
-         }
-         concat::fragment { "server.xml-${name}-footer":
-            target  => "${confdir}/server.xml",
-            content => "            </Realm>\n",
-            order   => "50_${service}_50_${host}_22_${class_name}_99",
-         }
-         create_resources(tomcat::realm,
-            hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:${class_name}:"), values($realms))))
-      } else {
-         if $realm {
-            concat::fragment { "server.xml-${name}":
-               target  => "${confdir}/server.xml",
-               content => "               ${_content} />\n",
-               order   => "50_${service}_50_${host}_22_${realm}_50",
-            }
-         }
-         else {
-            concat::fragment { "server.xml-${name}":
-               target  => "${confdir}/server.xml",
-               content => "            ${_content} />\n",
-               order   => "50_${service}_50_${host}_20",
-            }
-         }
+  if $host {
+    validate_string($host)
+    if $realms != {} {
+      concat::fragment { "server.xml-${name}-header":
+        target  => "${confdir}/server.xml",
+        content => "            ${_content}>\n",
+        order   => "50_${service}_50_${host}_22_${class_name}_00",
       }
-   } else {
-      if $realms != {} {
-         concat::fragment { "server.xml-${name}-header":
-            target  => "${confdir}/server.xml",
-            content => "         ${_content}>\n",
-            order   => "50_${service}_42_${class_name}_00",
-         }
-         concat::fragment { "server.xml-${name}-footer":
-            target  => "${confdir}/server.xml",
-            content => "         </Realm>\n",
-            order   => "50_${service}_42_${class_name}_99",
-         }
-         create_resources(tomcat::realm,
-            hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:*:${class_name}:"), values($realms))))
-      } else {
-         if $realm {
-            concat::fragment { "server.xml-${name}":
-               target  => "${confdir}/server.xml",
-               content => "            ${_content} />\n",
-               order   => "50_${service}_42_${realm}_50",
-            }
-         }
-         else {
-            concat::fragment { "server.xml-${name}":
-               target  => "${confdir}/server.xml",
-               content => "         ${_content} />\n",
-               order   => "50_${service}_40",
-            }
-         }
+      concat::fragment { "server.xml-${name}-footer":
+        target  => "${confdir}/server.xml",
+        content => "            </Realm>\n",
+        order   => "50_${service}_50_${host}_22_${class_name}_99",
       }
-   }
+      create_resources(tomcat::realm,
+        hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:${host}:${class_name}:"), values($realms))))
+    } else {
+      if $realm {
+        concat::fragment { "server.xml-${name}":
+          target  => "${confdir}/server.xml",
+          content => "               ${_content} />\n",
+          order   => "50_${service}_50_${host}_22_${realm}_50",
+        }
+      }
+      else {
+        concat::fragment { "server.xml-${name}":
+          target  => "${confdir}/server.xml",
+          content => "            ${_content} />\n",
+          order   => "50_${service}_50_${host}_20",
+        }
+      }
+    }
+  } else {
+    if $realms != {} {
+      concat::fragment { "server.xml-${name}-header":
+        target  => "${confdir}/server.xml",
+        content => "         ${_content}>\n",
+        order   => "50_${service}_42_${class_name}_00",
+      }
+      concat::fragment { "server.xml-${name}-footer":
+        target  => "${confdir}/server.xml",
+        content => "         </Realm>\n",
+        order   => "50_${service}_42_${class_name}_99",
+      }
+      create_resources(tomcat::realm,
+        hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:*:${class_name}:"), values($realms))))
+    } else {
+      if $realm {
+        concat::fragment { "server.xml-${name}":
+          target  => "${confdir}/server.xml",
+          content => "            ${_content} />\n",
+          order   => "50_${service}_42_${realm}_50",
+        }
+      }
+      else {
+        concat::fragment { "server.xml-${name}":
+          target  => "${confdir}/server.xml",
+          content => "         ${_content} />\n",
+          order   => "50_${service}_40",
+        }
+      }
+    }
+  }
 
 }

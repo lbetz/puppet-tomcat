@@ -35,21 +35,21 @@ define tomcat::listener(
   $ssl_engine = undef,
 ) {
 
-   validate_string($server)
-   validate_string($class_name)
+  validate_string($server)
+  validate_string($class_name)
 
-   $version = $tomcat::version
+  $version = $tomcat::version
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   concat::fragment { $name:
-      target  => "${confdir}/server.xml",
-      content => inline_template("   <Listener className='<%= @class_name %>'<% if @ssl_engine %> SSLEngine='<%= @ssl_engine %>'<% end %>/>\n"),
-      order   => '20',
-   }
+  concat::fragment { $name:
+    target  => "${confdir}/server.xml",
+    content => inline_template("   <Listener className='<%= @class_name %>'<% if @ssl_engine %> SSLEngine='<%= @ssl_engine %>'<% end %>/>\n"),
+    order   => '20',
+  }
 
 }

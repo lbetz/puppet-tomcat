@@ -21,17 +21,14 @@ describe('tomcat', :type => :class) do
     end
   end
 
-  context 'on redhat with version => 6' do
-    let(:params) { {:version => '6'} }
-    it do
-      should contain_package('tomcat6').with({
-        'ensure' => 'installed',
-      })
-    end
-  end
+end
+
+# Tomcat7 on RedHat
+describe('tomcat', :type => :class) do
+  let(:facts) { {:osfamily => 'RedHat', :concat_basedir => '/tmp'} }
+  let(:params) { {:version => '7'} }
 
   context 'on redhat with version => 7' do
-    let(:params) { {:version => '7'} }
     it do
       should contain_package('tomcat').with({
         'ensure' => 'installed',
@@ -39,9 +36,14 @@ describe('tomcat', :type => :class) do
     end
   end
 
-  context 'on debian with version => 6' do
-    let(:facts) { {:osfamily => 'Debian', :concat_basedir => '/tmp'} }
-    let(:params) { {:version => '6'} }
+end
+
+# Tomcat6 on RedHat
+describe('tomcat', :type => :class) do
+  let(:facts) { {:osfamily => 'RedHat', :concat_basedir => '/tmp'} }
+  let(:params) { {:version => '6'} }
+
+  context 'on redhat with version => 6' do
     it do
       should contain_package('tomcat6').with({
         'ensure' => 'installed',
@@ -49,9 +51,30 @@ describe('tomcat', :type => :class) do
     end
   end
 
+end
+
+# Tomcat6 on Debian
+describe('tomcat', :type => :class) do
+  let(:facts) { {:osfamily => 'Debian', :concat_basedir => '/tmp'} }
+  let(:params) { {:version => '6'} }
+
+  context 'on debian with version => 6' do
+    it do
+      should contain_package('tomcat6').with({
+        'ensure' => 'installed',
+      })
+    end
+  end
+
+end
+
+# Tomcat7 on Debian
+describe('tomcat', :type => :class) do
+  let(:facts) { {:osfamily => 'Debian', :concat_basedir => '/tmp'} }
+  let(:params) { {:version => '7'} }
+
   context 'on debian with version => 7' do
     let(:facts) { {:osfamily => 'Debian', :concat_basedir => '/tmp'} }
-    let(:params) { {:version => '7'} }
     it do
       should contain_package('tomcat7').with({
         'ensure' => 'installed',

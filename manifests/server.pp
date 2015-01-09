@@ -46,117 +46,117 @@
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 define tomcat::server(
-   $ensure    = running,
-   $enable    = true,
-   $user      = undef,
-   $group     = undef,
-   $port      = '8005',
-   $listeners = undef,
-   $resources = undef,
-   $services  = undef,
-   $java_home = undef,
-   $setenv    = [],
-   $manage    = true,
+  $ensure    = running,
+  $enable    = true,
+  $user      = undef,
+  $group     = undef,
+  $port      = '8005',
+  $listeners = undef,
+  $resources = undef,
+  $services  = undef,
+  $java_home = undef,
+  $setenv    = [],
+  $manage    = true,
 ) {
 
-   require tomcat
+  require tomcat
 
-   if $tomcat::standalone {
-      fail('Your using tomcat as standalone server')
-   }
+  if $tomcat::standalone {
+    fail('Your using tomcat as standalone server')
+  }
 
-   validate_re($ensure, '^(present|absent|running|stopped)$',
-      "${ensure} is not supported for ensure. Valid values are 'present', 'absent', 'running' and 'stopped'.")
-   validate_bool($enable)
-   validate_bool($manage)
+  validate_re($ensure, '^(present|absent|running|stopped)$',
+    "${ensure} is not supported for ensure. Valid values are 'present', 'absent', 'running' and 'stopped'.")
+  validate_bool($enable)
+  validate_bool($manage)
 
-   $version       = $params::version
-   $service       = $params::conf[$version]['service']
-   $initd         = "${params::conf[$version]['initd']}-${title}"
-   $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
-   $basedir       = "${tomcat::basedir}/${title}"
-   $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
+  $version       = $params::version
+  $service       = $params::conf[$version]['service']
+  $initd         = "${params::conf[$version]['initd']}-${title}"
+  $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
+  $basedir       = "${tomcat::basedir}/${title}"
+  $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
 
-   # set prameter defaults
-   if $listeners {
-      validate_hash($listeners)
-      $_listeners = $listeners }
-   else {
-      $_listeners = $tomcat::listeners
-   }
-   if $services {
-      validate_hash($services)
-      $_services = $services }
-   else {
-      $_services = $tomcat::services
-   }
-   if $resources {
-      validate_hash($resources)
-      $_resources = $resources }
-   else {
-      $_resources = $tomcat::resources
-   }
-   if $java_home {
-      validate_absolute_path($java_home)
-      $_java_home = $java_home }
-   else {
-      $_java_home = $tomcat::java_home
-   }
-   if $user { $_user = $user } else { $_user = $tomcat::user }
-   if $group { $_group = $group } else { $_group = $tomcat::group }
+  # set prameter defaults
+  if $listeners {
+    validate_hash($listeners)
+    $_listeners = $listeners }
+  else {
+    $_listeners = $tomcat::listeners
+  }
+  if $services {
+    validate_hash($services)
+    $_services = $services }
+  else {
+    $_services = $tomcat::services
+  }
+  if $resources {
+    validate_hash($resources)
+    $_resources = $resources }
+  else {
+    $_resources = $tomcat::resources
+  }
+  if $java_home {
+    validate_absolute_path($java_home)
+    $_java_home = $java_home }
+  else {
+    $_java_home = $tomcat::java_home
+  }
+  if $user { $_user = $user } else { $_user = $tomcat::user }
+  if $group { $_group = $group } else { $_group = $tomcat::group }
 
-   if $ensure != 'absent' {
-      tomcat::server::install { $title:
-         user  => $_user,
-         group => $_group,
-      }
-      -> anchor { "tomcat::server::${title}::begin":
-         notify => Tomcat::Server::Service[$title],
-      }
-      -> tomcat::server::initialize { $title:
-         user      => $_user,
-         group     => $_group,
-         java_home => $_java_home,
-         setenv    => $setenv,
-         notify    => Tomcat::Server::Service[$title],
-      }
-      -> tomcat::server::config { $title:
-         user      => $_user,
-         group     => $_group,
-         port      => $port,
-         services  => $_services,
-         resources => $_resources,
-         listeners => $_listeners,
-         manage    => $manage,
-      }
-      ~> tomcat::server::service { $title:
-         ensure => $ensure,
-         enable => $enable,
-      }
-      -> anchor { "tomcat::server::${title}::end": }
-   }
-   else {
-      anchor { "tomcat::server::${title}::begin": }
-      -> tomcat::server::service { $title:
-         ensure => stopped,
-         enable => false,
-      } ->
-      file { [$initd, $sysconfig, $catalina_pid]:
-         ensure => absent,
-      } ->
-      file { $basedir:
-         ensure  => absent,
-         recurse => true,
-         force   => true,
-      } ->
-      anchor { "tomact::server::${title}::end": }
+  if $ensure != 'absent' {
+    tomcat::server::install { $title:
+      user  => $_user,
+      group => $_group,
+    }
+    -> anchor { "tomcat::server::${title}::begin":
+      notify => Tomcat::Server::Service[$title],
+    }
+    -> tomcat::server::initialize { $title:
+      user      => $_user,
+      group     => $_group,
+      java_home => $_java_home,
+      setenv    => $setenv,
+      notify    => Tomcat::Server::Service[$title],
+    }
+    -> tomcat::server::config { $title:
+      user      => $_user,
+      group     => $_group,
+      port      => $port,
+      services  => $_services,
+      resources => $_resources,
+      listeners => $_listeners,
+      manage    => $manage,
+    }
+    ~> tomcat::server::service { $title:
+      ensure => $ensure,
+      enable => $enable,
+    }
+    -> anchor { "tomcat::server::${title}::end": }
+  }
+  else {
+    anchor { "tomcat::server::${title}::begin": }
+    -> tomcat::server::service { $title:
+      ensure => stopped,
+      enable => false,
+    } ->
+    file { [$initd, $sysconfig, $catalina_pid]:
+      ensure => absent,
+    } ->
+    file { $basedir:
+      ensure  => absent,
+      recurse => true,
+      force   => true,
+    } ->
+    anchor { "tomact::server::${title}::end": }
 
-      if $params::systemd {
-         file { "/etc/systemd/system/${service}-${title}.service":
-            ensure => absent,
-            notify => Exec['tomcat::systemd::daemon-reload'],
-         }
+    if $params::systemd {
+      file { "/etc/systemd/system/${service}-${title}.service":
+        ensure => absent,
+        notify => Exec['tomcat::systemd::daemon-reload'],
       }
-   }
+    }
+  }
 
 }

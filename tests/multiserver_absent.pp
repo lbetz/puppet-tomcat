@@ -1,17 +1,17 @@
 class { 'tomcat':
-   ensure => stopped,
-   enable => false,
+  ensure => stopped,
+  enable => false,
 }
 
 tomcat::server { 'myapp2':
-   ensure => absent
+  ensure => absent
 }
 
 tomcat::server { 'myapp1':
-   ensure => absent
+  ensure => absent
 }
 
 user { 'myapp1':
-   ensure => absent,
-   require => Tomcat::Server['myapp1'],
+  ensure  => absent,
+  require => Tomcat::Server['myapp1'],
 }

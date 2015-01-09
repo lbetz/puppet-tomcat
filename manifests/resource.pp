@@ -30,33 +30,33 @@
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 define tomcat::resource(
-   $server      = regsubst($name, '^([^:]+):[^:]+$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^([^:]+):[^:]+$', '\1'),
-   },
-   $resource    = regsubst($name, '^[^:]+:([^:]+)$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^[^:]+:([^:]+)$', '\1'),
-   },
-   $auth        = 'container',
-   $type,
-   $extra_attrs = {},
+  $type,
+  $server      = regsubst($name, '^([^:]+):[^:]+$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^([^:]+):[^:]+$', '\1'),
+  },
+  $resource    = regsubst($name, '^[^:]+:([^:]+)$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^[^:]+:([^:]+)$', '\1'),
+  },
+  $auth        = 'container',
+  $extra_attrs = {},
 ) {
 
-   validate_hash($extra_attrs)
+  validate_hash($extra_attrs)
 
-   $version = $tomcat::version
+  $version = $tomcat::version
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   concat::fragment { "server.xml-${name}":
-      target  => "${confdir}/server.xml",
-      content => template('tomcat/resource.xml.erb'),
-      order   => '35',
-   }
+  concat::fragment { "server.xml-${name}":
+    target  => "${confdir}/server.xml",
+    content => template('tomcat/resource.xml.erb'),
+    order   => '35',
+  }
 
 }

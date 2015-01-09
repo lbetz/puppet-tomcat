@@ -52,38 +52,38 @@
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 define tomcat::connector(
-   $server             = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1'), },
-   $service            = regsubst($name, '^[^:]+:([^:]+):.*$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^[^:]+:([^:]+):.*$', '\1'), },
-   $connector          = regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1'), },
-   $uri_encoding       = 'UTF-8',
-   $port               = '8080',
-   $address            = false,
-   $protocol           = 'HTTP/1.1',
-   $connection_timeout = '20000',
-   $redirect_port      = '8443',
-   $options            = [],
-   $scheme             = false,
-   $executor           = false,
+  $server             = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1'), },
+  $service            = regsubst($name, '^[^:]+:([^:]+):.*$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^[^:]+:([^:]+):.*$', '\1'), },
+  $connector          = regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1'), },
+  $uri_encoding       = 'UTF-8',
+  $port               = '8080',
+  $address            = false,
+  $protocol           = 'HTTP/1.1',
+  $connection_timeout = '20000',
+  $redirect_port      = '8443',
+  $options            = [],
+  $scheme             = false,
+  $executor           = false,
 ) {
 
-   $version         = $tomcat::version
+  $version         = $tomcat::version
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   concat::fragment { "server.xml-${name}":
-      target  => "${confdir}/server.xml",
-      content => template('tomcat/connector.xml.erb'),
-      order   => "50_${service}_10",
-   }
+  concat::fragment { "server.xml-${name}":
+    target  => "${confdir}/server.xml",
+    content => template('tomcat/connector.xml.erb'),
+    order   => "50_${service}_10",
+  }
 
 }

@@ -34,66 +34,66 @@
 # Author Lennart Betz <lennart.betz@netways.de>
 #
 define tomcat::engine(
-   $default_host = 'localhost',
-   $hosts        = undef,
-   $realms       = {},
-   $server      = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1'), },
-   $service     = regsubst($name, '^[^:]+:([^:]+):.*$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^[^:]+:([^:]+):.*$', '\1'), },
-   $engine      = regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1') ? {
-      $name   => undef,
-      default => regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1'), },
+  $default_host = 'localhost',
+  $hosts        = undef,
+  $realms       = {},
+  $server      = regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^([^:]+):[^:]+:[^:]+$', '\1'), },
+  $service     = regsubst($name, '^[^:]+:([^:]+):.*$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^[^:]+:([^:]+):.*$', '\1'), },
+  $engine      = regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1') ? {
+    $name   => undef,
+    default => regsubst($name, '^[^:]+:[^:]+:([^:]+)$', '\1'), },
 ) {
 
-   validate_hash($realms)
+  validate_hash($realms)
 
-   $version = $tomcat::version
+  $version = $tomcat::version
 
-   if $hosts {
-      validate_hash($hosts)
-      if ! has_key($hosts, $default_host) {
-         warning("The defined default host '${default_host}' doesn't exist, adding a default entry.")
-         $_hosts = merge($hosts, { "${default_host}" => $tomcat::hosts['localhost'] }) }
-      else {
-        $_hosts = $hosts }
-      }
-   else {
-      $_hosts = { "${default_host}" => $tomcat::hosts['localhost'] }
-   }
+  if $hosts {
+    validate_hash($hosts)
+    if ! has_key($hosts, $default_host) {
+      warning("The defined default host '${default_host}' doesn't exist, adding a default entry.")
+      $_hosts = merge($hosts, { "${default_host}" => $tomcat::hosts['localhost'] }) }
+    else {
+      $_hosts = $hosts }
+    }
+  else {
+    $_hosts = { "${default_host}" => $tomcat::hosts['localhost'] }
+  }
 
-   if $tomcat::standalone {
-      $confdir = $params::conf[$version]['confdir'] }
-   else {
-      $confdir = "${tomcat::basedir}/${server}/conf"
-   }
+  if $tomcat::standalone {
+    $confdir = $params::conf[$version]['confdir'] }
+  else {
+    $confdir = "${tomcat::basedir}/${server}/conf"
+  }
 
-   concat::fragment { "server.xml-${name}-header":
-      target  => "${confdir}/server.xml",
-      content => "\n      <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
-      order   => "50_${service}_20",
-   }
+  concat::fragment { "server.xml-${name}-header":
+    target  => "${confdir}/server.xml",
+    content => "\n      <Engine name='${engine}' defaultHost='${default_host}'>\n\n",
+    order   => "50_${service}_20",
+  }
 
-   concat::fragment { "server.xml-${name}-footer":
-      target  => "${confdir}/server.xml",
-      content => "\n      </Engine>\n",
-      order   => "50_${service}_89",
-   }
+  concat::fragment { "server.xml-${name}-footer":
+    target  => "${confdir}/server.xml",
+    content => "\n      </Engine>\n",
+    order   => "50_${service}_89",
+  }
 
-   # todo: maybe change the ownership
-   file { "${confdir}/${engine}":
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '2775',
-   }
+  # todo: maybe change the ownership
+  file { "${confdir}/${engine}":
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '2775',
+  }
 
-   create_resources(tomcat::host,
-      hash(zip(prefix(keys($_hosts), "${server}:${service}:${engine}:"), values($_hosts))))
+  create_resources(tomcat::host,
+    hash(zip(prefix(keys($_hosts), "${server}:${service}:${engine}:"), values($_hosts))))
 
-   create_resources(tomcat::realm,
-      hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:"), values($realms))))
+  create_resources(tomcat::realm,
+    hash(zip(prefix(keys($realms), "${server}:${service}:${engine}:"), values($realms))))
 
 }
