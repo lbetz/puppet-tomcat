@@ -115,7 +115,7 @@ class tomcat(
       ~> Service[$service]
     $standalone  = true
     $ensure_file = 'file'
-    $_manage = $manage,
+    $_manage = $manage
   }
 
   class { 'install':

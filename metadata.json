@@ -1,10 +1,10 @@
 {
   "author": "Lennart Betz",
   "name": "lbetz-tomcat",
-  "version": "0.4.0",
-  "source": "git://github.com/lbetz/puppet-tomcat",
+  "version": "0.4.1",
+  "source": "git://github.com/lbetz/puppet-tomcat.git",
   "license": "Apache-2.0",
-  "project_page": "http://github.com/lbetz/puppet-tomcat.git",
+  "project_page": "http://github.com/lbetz/puppet-tomcat",
   "summary": "Setup and configure Apache Tomcat on RedHat/CentOS and Debian",
   "operatingsystem_support": [
     {
