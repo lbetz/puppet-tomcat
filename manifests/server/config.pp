@@ -63,6 +63,16 @@ define tomcat::server::config(
         source  => "file:${params::conf[$version]['confdir']}/policy.d",
       }
     }
+   
+   # copy default web.xml for instances only
+    if ! $standalone {
+      file { "${confdir}/web.xml":
+        ensure  => file,
+        recurse => true,
+        replace => false,
+        source  => "file:${params::conf[$version]['confdir']}/web.xml",
+      }
+    }
 
     concat { "${confdir}/server.xml":
       owner => 'root',
