@@ -15,6 +15,7 @@ class tomcat::install {
   $version = $tomcat::version
   $release = $tomcat::release
   $basedir = $tomcat::basedir
+  $binwrapper = $tomcat::binwrapper
   $package = $params::conf[$version]['package']
   $group   = $params::conf[$version]['group']
   $confdir = $params::conf[$version]['confdir']
@@ -39,5 +40,13 @@ class tomcat::install {
       mode   => '0775',
     }
   }
+if $::osfamily == 'redhat' and $version == '7'  {
+ 
+     exec { "remove general config lines in /usr/sbin/tomcat":
+       path        => '/bin:/usr/bin',
+       command     => "sed -i '/Get the tomcat config/,+7d' ${binwrapper}",
+       refreshonly => true,
+       notify      => $notify,
+     }
 
 }
