@@ -51,6 +51,8 @@ class tomcat::params {
                       'webappdir'       => '/var/lib/tomcat6/webapps',
                       'workdir'         => '/var/cache/tomcat6/work',
                       'initd'           => '/etc/init.d/tomcat6',
+                      'binwrapper'      => '/usr/sbin/tomcat6',
+ 
                     },
                     '7' => {
                       'user'            => 'tomcat',
@@ -69,6 +71,7 @@ class tomcat::params {
                       'webappdir'       => '/var/lib/tomcat/webapps',
                       'workdir'         => '/var/cache/tomcat/work',
                       'initd'           => '/etc/init.d/tomcat',
+                      'binwrapper'      => '/usr/sbin/tomcat',
                     },
                   }
 
