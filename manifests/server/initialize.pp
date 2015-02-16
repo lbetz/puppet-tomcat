@@ -33,15 +33,17 @@ define tomcat::server::initialize(
     fail("tomcat::server::initialize is a private define resource of module tomcat, you're not able to use.")
   }
 
-  $version       = $tomcat::version
-  $service       = $params::conf[$version]['service']
-  $basedir       = "${tomcat::basedir}/${title}"
-  $sysconfig     = "${params::conf[$version]['sysconfig']}-${title}"
-  $catalina_home = $params::conf[$version]['catalina_home']
-  $catalina_base = $basedir
-  $catalina_pid  = "${params::conf[$version]['catalina_pid']}-${title}"
-  $tempdir       = "${basedir}/temp"
-  $logdir        = "${basedir}/logs"
+  $version        = $tomcat::version
+  $service        = $params::conf[$version]['service']
+  $web_xml_srcdir = $params::conf[$version]['confdir']
+  $basedir        = "${tomcat::basedir}/${title}"
+  $sysconfig      = "${params::conf[$version]['sysconfig']}-${title}"
+  $catalina_home  = $params::conf[$version]['catalina_home']
+  $catalina_base  = $basedir
+  $catalina_pid   = "${params::conf[$version]['catalina_pid']}-${title}"
+  $confdir        = "${basedir}/conf"
+  $tempdir        = "${basedir}/temp"
+  $logdir         = "${basedir}/logs"
 
   file { $sysconfig:
     ensure  => file,
@@ -56,6 +58,15 @@ define tomcat::server::initialize(
     owner  => $user,
     group  => $group,
     mode   => '0644',
+  }
+
+  file { "${confdir}/web.xml":
+    ensure  => file,
+    owner   => 'root',
+    group   => $group,
+    mode    => '0664',
+    replace => false,
+    source  => "file:${web_xml_srcdir}/web.xml"
   }
 
 }

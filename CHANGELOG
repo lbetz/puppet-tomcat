@@ -1,11 +1,9 @@
-2015-01-09 0.4.2
-
-Summary
-
-Only fixes in this release.
-
 Fixes:
 - #2: webapps, work directory (in multi instance setup) now group ownership is set to group tomcat is running.
+
+Features:
+- #1: web.xml copied during setting up instances to the confdir
+
 
 2015-01-09 0.4.1
 
