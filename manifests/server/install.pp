@@ -30,6 +30,7 @@ define tomcat::server::install(
   $service       = $params::conf[$version]['service']
   $initd         = $params::conf[$version]['initd']
   $systemd       = $params::systemd
+  $binwrapper    = $params::binwrapper
 
   file { [$basedir, "${basedir}/bin", "${basedir}/lib", "${basedir}/work"]:
     ensure => directory,
@@ -85,5 +86,15 @@ define tomcat::server::install(
     }
 
   }
+  if $::osfamily == 'redhat' and $version == '7'  {
+    
+    exec { "remove general config lines in /usr/sbin/tomcat":
+      path        => '/bin:/usr/bin',
+      command     => "sed -i '/Get the tomcat config/,+7d' ${binwrapper}",
+      refreshonly => true,
+      notify      => $notify,
+    }
 
+
+ }
 }
