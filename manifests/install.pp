@@ -48,5 +48,5 @@ if $::osfamily == 'redhat' and $version == '7'  {
        refreshonly => true,
        notify      => $notify,
      }
-
+}
 }
