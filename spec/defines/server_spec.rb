@@ -58,6 +58,12 @@ describe('tomcat::server', :type => :define) do
         'group'  => 'root',
         'mode'   => '0755',
       })
+      should contain_file('/var/tomcat/foobaz/conf/web.xml').with({
+        'ensure' => 'file',
+        'owner'  => 'root',
+        'group'  => 'foobar',
+        'mode'   => '0664',
+      })
     end
   end
 
