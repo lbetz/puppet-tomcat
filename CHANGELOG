@@ -1,9 +1,9 @@
 Fixes:
 - #2: webapps, work directory (in multi instance setup) now group ownership is set to group tomcat is running.
+- #4: tomcat7 on redhat didn't start instances
 
 Features:
-- #1: web.xml copied during setting up instances to the confdir
-
+- #2: webapps, work directory (in multi instance setup) now group ownership is set to group tomcat is running.
 
 2015-01-09 0.4.1
 
