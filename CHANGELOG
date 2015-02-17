@@ -1,11 +1,7 @@
-2015-01-09 0.4.2
-
-Summary
-
-Only fixes in this release.
-
 Fixes:
 - #2: webapps, work directory (in multi instance setup) now group ownership is set to group tomcat is running.
+- #4: tomcat7 on redhat didn't start instances
+
 
 2015-01-09 0.4.1
 
