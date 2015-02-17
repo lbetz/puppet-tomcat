@@ -31,6 +31,11 @@ _LOG="<%= @logdir %>/<%= @service %>-sysd.log"
 # Set the TOMCAT_PID location
 CATALINA_PID="<%= @catalina_pid %>"
 
+<% if @osfamily == 'RedHat' %>
+# Set TOMCAT_CFG for use in /usr/bin/tomcat (redhat)
+TOMCAT_CFG="<%= @sysconfig %>"
+<% end -%>
+
 # If you wish to further customize your tomcat environment,
 # put your own definitions here
 # (i.e. LD_LIBRARY_PATH for some jdbc drivers)
