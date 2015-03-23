@@ -35,7 +35,7 @@ class tomcat::install {
     file { $basedir:
       ensure => directory,
       owner  => 'root',
-      group  => 'root',
+      group  => $group,
       mode   => '0775',
     }
   }
