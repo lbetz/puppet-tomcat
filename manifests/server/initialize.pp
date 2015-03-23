@@ -18,10 +18,6 @@
 # [*setenv*]
 #   Handles environment variables in sysconfig file.
 #
-# [*manage*]
-#    Enables (default) the initial of web.xml by this module. Disable means, that
-#    you have to manage the configuration outside and notify the service.
-#
 # === Authors
 #
 # Author Lennart Betz <lennart.betz@netways.de>
@@ -31,7 +27,6 @@ define tomcat::server::initialize(
   $group,
   $java_home,
   $setenv,
-  $manage,
 ) {
 
   if $module_name != $caller_module_name {
@@ -65,14 +60,12 @@ define tomcat::server::initialize(
     mode   => '0644',
   }
 
-  if $manage {
-    file { "${confdir}/web.xml":
-      ensure  => file,
-      owner   => 'root',
-      group   => $group,
-      mode    => '0664',
-      replace => false,
-      source  => "file:${web_xml_srcdir}/web.xml"
-    }
+  file { "${confdir}/web.xml":
+    ensure  => file,
+    owner   => 'root',
+    group   => $group,
+    mode    => '0664',
+    replace => false,
+    source  => "file:${web_xml_srcdir}/web.xml"
   }
 }
