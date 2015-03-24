@@ -13,8 +13,8 @@ describe('tomcat::server', :type => :define) do
       should contain_file('/var/tomcat/foobaz').with({
         'ensure' => 'directory',
         'owner'  => 'root',
-        'group'  => 'root',
-        'mode'   => '0755',
+        'group'  => 'foobar',
+        'mode'   => '0775',
       })
       should contain_file('/var/tomcat/foobaz/bin').with({
         'ensure' => 'directory',

@@ -31,18 +31,18 @@ define tomcat::server::install(
   $initd         = $params::conf[$version]['initd']
   $systemd       = $params::systemd
 
-  file { [$basedir, "${basedir}/bin", "${basedir}/lib"]:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-
-  file { ["${basedir}/conf", "${basedir}/webapps", "${basedir}/work"]:
+  file { [$basedir, "${basedir}/conf", "${basedir}/webapps", "${basedir}/work"]:
     ensure => directory,
     owner  => 'root',
     group  => $group,
     mode   => '0775',
+  }
+
+  file { ["${basedir}/bin", "${basedir}/lib"]:
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
   file { ["${basedir}/logs", "${basedir}/temp"]:

@@ -1,3 +1,6 @@
+Fixes:
+- #8: CATALINA_BASE now own by group tomcat is running
+
 2015-02-17 0.4.2
 
 Summary
