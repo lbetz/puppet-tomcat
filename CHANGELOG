@@ -1,7 +1,8 @@
-Features:
-- #1: web.xml is copied to confdir (multi instance)
+Fixes:
 - #8: CATALINA_BASE changed to group tomcat is running
 
+Features:
+- #1: web.xml is copied to confdir (multi instance)
 
 2015-02-17 0.4.2
 
