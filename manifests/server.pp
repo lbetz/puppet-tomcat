@@ -119,7 +119,6 @@ define tomcat::server(
       java_home => $_java_home,
       setenv    => $setenv,
       notify    => Tomcat::Server::Service[$title],
-      manage    => $manage,
     }
     -> tomcat::server::config { $title:
       user      => $_user,
